@@ -347,10 +347,20 @@ button { font: inherit; }
 }
 .about-body .text-link { margin-top: 1.7rem; }
 
-.services { padding-block: var(--section-y); }
+.services {
+  --service-card-bg: var(--bg);
+  padding-block: var(--section-y);
+}
 .services-intro { padding-bottom: var(--section-y); }
 .services-page-section { padding-block: var(--section-y); }
-.services-page-section--tint { background: var(--beige); }
+.services-page-section--tint {
+  --service-card-bg: var(--beige);
+  background: var(--beige);
+}
+.services-page-section--white {
+  --service-card-bg: var(--paper);
+  background: var(--paper);
+}
 .services-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -361,15 +371,13 @@ button { font: inherit; }
   overflow: hidden;
 }
 .service-card {
-  background: var(--bg);
+  background: var(--service-card-bg);
   padding: clamp(2rem, 4vw, 3.25rem);
-  transition: background .4s var(--ease);
   grid-column: span 2;
 }
 .service-card:nth-child(n+4) { grid-column: span 3; }
-.service-card:hover { background: var(--paper); }
-.services-page-section--tint .service-card { background: var(--beige); }
-.services-page-section--tint .service-card:hover { background: var(--paper); }
+.services-page-section--white .service-card,
+.services-page-section--white .work-card { background: var(--paper); }
 .services-grid--three .service-card { grid-column: span 2; }
 .service-index {
   font-family: var(--serif);
@@ -489,6 +497,7 @@ button { font: inherit; }
   padding-block: var(--section-y);
   background: var(--beige);
 }
+.process.services-page-section--white { background: var(--paper); }
 .process-list {
   list-style: none;
   margin: 0;

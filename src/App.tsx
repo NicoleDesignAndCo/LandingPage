@@ -327,7 +327,7 @@ function ServicesPage() {
             What we do
           </Reveal>
           <Reveal as="h1" className="page-title page-title--services">
-            Services designed to support your next stage of growth.
+            Your own digital growth support team.
           </Reveal>
           <Reveal as="p" className="page-hero-sub">
             From websites and digital marketing support to product design and development, we help small businesses and product teams build,
@@ -434,27 +434,28 @@ const capabilities = [
 ] as const;
 
 function ServicesIntroSection() {
-  return (
-    <section className="about page-section services-intro">
-      <div className="container about-grid">
-        <Reveal as="p" className="eyebrow">
-          Digital growth support
-        </Reveal>
-        <Reveal className="about-body">
-          <h2 className="about-lead">A digital growth and support team for the work that keeps moving.</h2>
-          <p className="about-text">
-            Nicole Design &amp; Co. helps businesses and product teams maintain a stronger digital presence, improve existing experiences, and
-            move important design and development work forward without adding another full-time hire.
-          </p>
-        </Reveal>
-      </div>
-    </section>
-  );
+  return <></>
+  // return (
+  //   <section className="about page-section services-intro">
+  //     <div className="container about-grid">
+  //       <Reveal as="p" className="eyebrow">
+  //         Digital growth support
+  //       </Reveal>
+  //       <Reveal className="about-body">
+  //         <h2 className="about-lead">A digital growth and support team for the work that keeps moving.</h2>
+  //         <p className="about-text">
+  //           Nicole Design &amp; Co. helps businesses and product teams maintain a stronger digital presence, improve existing experiences, and
+  //           move important design and development work forward without adding another full-time hire.
+  //         </p>
+  //       </Reveal>
+  //     </div>
+  //   </section>
+  // );
 }
 
 function DigitalSupportPackagesSection() {
   return (
-    <section className="services services-page-section">
+    <section className="services services-page-section services-page-section--tint">
       <div className="container">
         <SectionHeading
           eyebrow="Digital support packages"
@@ -479,7 +480,7 @@ function DigitalSupportPackagesSection() {
 
 function ProductSupportSection() {
   return (
-    <section className="services services-page-section services-page-section--tint">
+    <section className="services services-page-section services-page-section--white">
       <div className="container">
         <SectionHeading
           eyebrow="Product support"
@@ -521,7 +522,7 @@ function ProductSupportSection() {
 
 function PackageGuidanceSection() {
   return (
-    <section className="services services-page-section">
+    <section className="services services-page-section services-page-section--tint">
       <div className="container">
         <SectionHeading
           eyebrow="Package guidance"
@@ -544,7 +545,7 @@ function PackageGuidanceSection() {
 
 function CustomEngagementsSection() {
   return (
-    <section className="process services-page-section">
+    <section className="process services-page-section services-page-section--white">
       <div className="container">
         <SectionHeading
           eyebrow="Custom engagements"
@@ -569,7 +570,7 @@ function CustomEngagementsSection() {
 
 function CapabilitiesSection() {
   return (
-    <section className="services services-page-section">
+    <section className="services services-page-section services-page-section--tint">
       <div className="container">
         <SectionHeading
           eyebrow="Capabilities"
