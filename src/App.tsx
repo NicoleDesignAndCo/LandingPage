@@ -1,12 +1,13 @@
 import { ElementType, ReactNode, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
-import { processSteps, services, site, team } from "./data";
+import { processSteps, sampleWebsites, services, site, team } from "./data";
 import { useReveal, useScrolled } from "./hooks";
 
 const navItems = [
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
+  { to: "/work", label: "Work" },
   { to: "/process", label: "How We Work" },
   { to: "/contact", label: "Contact" },
 ];
@@ -29,6 +30,14 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: "How We Work | Nicole Design & Co.",
     description: "A simple, considered process for discovery, design, and implementation.",
   },
+  "/work": {
+    title: "Work | Nicole Design & Co.",
+    description: "Sample website concepts from Nicole Design & Co. for service businesses, real estate, and hospitality brands.",
+  },
+  "/team": {
+    title: "Team | Nicole Design & Co.",
+    description: "Meet Nicole Buloran and Nick Castillo, the design and development team behind Nicole Design & Co.",
+  },
   "/contact": {
     title: "Contact | Nicole Design & Co.",
     description: "Start a project with Nicole Design & Co. or email hello@nicoledesignandco.com.",
@@ -43,8 +52,10 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/process" element={<ProcessPage />} />
-        <Route path="/team" element={<Navigate to="/about" replace />} />
+        <Route path="/work" element={<WorkPage />} />
+        <Route path="/team" element={<TeamPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
   );
@@ -224,6 +235,7 @@ function HomePage() {
       <AboutSection />
       <ServicesSection />
       <ProcessSection />
+      <SampleWebsitesSection />
       <TeamSection />
       <ContactSection />
     </>
@@ -241,14 +253,12 @@ function Hero() {
           Nicole Design <span className="amp">&amp;</span> Co.
         </Reveal>
         <Reveal as="p" className="hero-sub">
-          We help businesses create, improve, and maintain their digital presence through thoughtful design, reliable development, and ongoing
-          support. Whether you're launching something new, improving an existing website, or looking for a long-term partner to support your
-          business, we're here to help.
+          Product design, websites, and development for businesses ready to build better digital experiences.
         </Reveal>
         <Reveal className="hero-actions">
           <TallyButton className="btn btn-primary">Start a Project</TallyButton>
-          <Link to="/about" className="btn btn-ghost">
-            Meet the Team
+          <Link to="/work" className="btn btn-ghost">
+            View Our Work
           </Link>
         </Reveal>
       </div>
@@ -256,9 +266,9 @@ function Hero() {
         <div className="meta-rule" />
         <ul className="hero-disciplines">
           <li>Product Design</li>
-          <li>UX / UI</li>
-          <li>Web Design</li>
+          <li>Websites</li>
           <li>Development</li>
+          <li>Digital Support</li>
         </ul>
       </Reveal>
     </section>
@@ -282,13 +292,26 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
           About the studio
         </Reveal>
         <Reveal className="about-body">
-          <h2 className="about-lead">Your Design &amp; Development Partner</h2>
-          <p className="about-text">Nicole Design &amp; Co. partners with businesses to bring ideas to life and support their growth online.</p>
-          <p className="about-text">
-            From websites and software to marketing materials and ongoing improvements, we combine design thinking with technical expertise to
-            create solutions that are both effective and easy to maintain.
-          </p>
-          <p className="about-text">Our goal is simple: help businesses move forward with confidence.</p>
+          <h2 className="about-lead">{standalone ? "Your Design & Development Partner" : "Small studio. Thoughtful work."}</h2>
+          {standalone ? (
+            <>
+              <p className="about-text">Nicole Design &amp; Co. partners with businesses to bring ideas to life and support their growth online.</p>
+              <p className="about-text">
+                From websites and software to marketing materials and ongoing improvements, we combine design thinking with technical expertise to
+                create solutions that are both effective and easy to maintain.
+              </p>
+              <p className="about-text">Our goal is simple: help businesses move forward with confidence.</p>
+            </>
+          ) : (
+            <>
+              <p className="about-text">
+                Nicole Design &amp; Co. is a small design and development studio helping businesses create clearer, more useful digital experiences.
+              </p>
+              <Link className="text-link" to="/about">
+                Learn about the studio
+              </Link>
+            </>
+          )}
         </Reveal>
       </div>
     </section>
@@ -308,7 +331,12 @@ function ServicesSection({ standalone = false }: { standalone?: boolean }) {
     <section className={`services${standalone ? " page-section" : ""}`}>
       <div className="container">
         {!standalone ? (
-          <SectionHeading eyebrow="What we do" title={<>Services built around<br />your business</>} twoLine />
+          <SectionHeading
+            eyebrow="What we do"
+            title={<>Services built around<br />your business</>}
+            intro="A brief look at the ways we help teams plan, design, build, and maintain better digital experiences."
+            twoLine
+          />
         ) : null}
         <div className="services-grid">
           {services.map((service) => (
@@ -316,9 +344,21 @@ function ServicesSection({ standalone = false }: { standalone?: boolean }) {
               <span className="service-index">{service.index}</span>
               <h3 className="service-title">{service.title}</h3>
               <p className="service-desc">{service.description}</p>
+              {!standalone ? (
+                <Link className="card-link" to="/services">
+                  View services
+                </Link>
+              ) : null}
             </Reveal>
           ))}
         </div>
+        {!standalone ? (
+          <Reveal className="section-action">
+            <Link className="text-link" to="/services">
+              Explore all services
+            </Link>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );
@@ -337,7 +377,12 @@ function ProcessSection({ standalone = false }: { standalone?: boolean }) {
     <section className={`process${standalone ? " page-section" : ""}`}>
       <div className="container">
         {!standalone ? (
-          <SectionHeading eyebrow="How we work" title={<>A simple,<br />considered process</>} twoLine />
+          <SectionHeading
+            eyebrow="How we work"
+            title={<>A simple,<br />considered process</>}
+            intro="We keep projects focused through three practical stages: understand the problem, shape the experience, then bring it to life."
+            twoLine
+          />
         ) : null}
         <ol className="process-list">
           {processSteps.map((step) => (
@@ -350,8 +395,65 @@ function ProcessSection({ standalone = false }: { standalone?: boolean }) {
             </Reveal>
           ))}
         </ol>
+        {!standalone ? (
+          <Reveal className="section-action">
+            <Link className="text-link" to="/process">
+              See the process
+            </Link>
+          </Reveal>
+        ) : null}
       </div>
     </section>
+  );
+}
+
+function WorkPage() {
+  return (
+    <PageShell eyebrow="Selected work" title="Sample websites with a practical point of view">
+      <SampleWebsitesSection standalone />
+    </PageShell>
+  );
+}
+
+function SampleWebsitesSection({ standalone = false }: { standalone?: boolean }) {
+  return (
+    <section className={`work-preview${standalone ? " page-section" : ""}`}>
+      <div className="container">
+        {!standalone ? (
+          <SectionHeading
+            eyebrow="Sample websites"
+            title="A few demos of what thoughtful digital presence can feel like."
+            intro="These concept sites show different tones, industries, and user journeys without turning the homepage into a full portfolio."
+          />
+        ) : null}
+        <div className="work-grid">
+          {sampleWebsites.map((website) => (
+            <Reveal as="article" className="work-card" key={website.title}>
+              <h3 className="work-title">{website.title}</h3>
+              <p className="work-desc">{website.description}</p>
+              <a className="card-link" href={website.url} target="_blank" rel="noopener">
+                View Demo<span className="link-arrow" aria-hidden="true">↗</span>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+        {!standalone ? (
+          <Reveal className="section-action">
+            <Link className="text-link" to="/work">
+              View sample work
+            </Link>
+          </Reveal>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+function TeamPage() {
+  return (
+    <PageShell eyebrow="The team" title="Two people, one thoughtful workflow">
+      <TeamSection standalone />
+    </PageShell>
   );
 }
 
@@ -363,7 +465,7 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
           <SectionHeading
             eyebrow="The people"
             title="The people behind the work."
-            intro="Nicole Design & Co. combines design strategy and development expertise. Explore our individual portfolios to learn more about our experience and selected projects."
+            intro="Nicole Buloran and Nick Castillo bring product design, web design, and development together in one small studio."
           />
         ) : (
           <Reveal className="section-head section-head--wide">
@@ -375,34 +477,45 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
             </p>
           </Reveal>
         )}
-        <div className="team-grid">
+        <div className={`team-grid${!standalone ? " team-grid--preview" : ""}`}>
           {team.map((member) => (
             <Reveal as="article" className="team-card" key={member.name}>
-              <img className="team-photo" src={member.image} alt={member.imageAlt} />
+              {standalone ? <img className="team-photo" src={member.image} alt={member.imageAlt} /> : null}
               <div className="team-info">
                 <h3 className="team-name">{member.name}</h3>
                 <p className="team-role">{member.role}</p>
-                <p className="team-bio">{member.bio}</p>
-                <ul className="team-tags">
-                  {member.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-                <div className="team-actions">
-                  <a href={member.portfolio} target="_blank" rel="noopener" className="team-link team-link--primary">
-                    View Portfolio<span className="link-arrow" aria-hidden="true">↗</span>
-                  </a>
-                  <a href={member.linkedin} target="_blank" rel="noopener" className="team-link">
-                    LinkedIn
-                  </a>
-                  <a href={`mailto:${member.email}`} className="team-link">
-                    Email
-                  </a>
-                </div>
+                {standalone ? (
+                  <>
+                    <p className="team-bio">{member.bio}</p>
+                    <ul className="team-tags">
+                      {member.tags.map((tag) => (
+                        <li key={tag}>{tag}</li>
+                      ))}
+                    </ul>
+                    <div className="team-actions">
+                      <a href={member.portfolio} target="_blank" rel="noopener" className="team-link team-link--primary">
+                        View Portfolio<span className="link-arrow" aria-hidden="true">↗</span>
+                      </a>
+                      <a href={member.linkedin} target="_blank" rel="noopener" className="team-link">
+                        LinkedIn
+                      </a>
+                      <a href={`mailto:${member.email}`} className="team-link">
+                        Email
+                      </a>
+                    </div>
+                  </>
+                ) : null}
               </div>
             </Reveal>
           ))}
         </div>
+        {!standalone ? (
+          <Reveal className="section-action">
+            <Link className="text-link" to="/team">
+              Meet the team
+            </Link>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );

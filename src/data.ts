@@ -13,22 +13,45 @@ export const services = [
   {
     index: "01",
     title: "Product Design",
-    description: "Designing user-centered products that balance business goals, usability, and scalability.",
+    description: "Shape product ideas into clear, usable experiences that support real business goals.",
   },
   {
     index: "02",
-    title: "UX / UI Design",
-    description: "Creating intuitive interfaces for web applications, software products, and websites.",
+    title: "UX/UI Design",
+    description: "Plan flows, interfaces, and design systems that make digital products easier to use.",
   },
   {
     index: "03",
-    title: "Web Design",
-    description: "Designing responsive websites that communicate clearly and support business growth.",
+    title: "Web Design & Development",
+    description: "Design and build responsive websites that communicate clearly and are easy to maintain.",
   },
   {
     index: "04",
-    title: "Development",
-    description: "Building reliable websites and digital experiences through front-end, WordPress, and custom development.",
+    title: "Marketing Materials & Digital Assets",
+    description: "Create polished digital assets for launches, campaigns, presentations, and ongoing brand needs.",
+  },
+  {
+    index: "05",
+    title: "Digital Support Packages",
+    description: "Ongoing design and development support for businesses that need a dependable digital partner.",
+  },
+] as const;
+
+export const sampleWebsites = [
+  {
+    title: "Maya Bennett Real Estate",
+    description: "A polished real estate website concept built around trust, local expertise, and clear property discovery.",
+    url: "https://maya-bennett.vercel.app/",
+  },
+  {
+    title: "Serene Paths Clinic",
+    description: "A calm clinic website concept with accessible service information and a warm path toward booking.",
+    url: "https://serene-paths.vercel.app/",
+  },
+  {
+    title: "North Peak Coffee Co.",
+    description: "A focused coffee brand website concept with product storytelling, location details, and ecommerce-ready structure.",
+    url: "https://north-peak-coffee-co.vercel.app/",
   },
 ] as const;
 
