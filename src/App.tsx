@@ -27,7 +27,7 @@ const navItems = [
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
   { to: "/work", label: "Work" },
-  { to: "/process", label: "How We Work" },
+  // { to: "/process", label: "How We Work" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -358,6 +358,7 @@ function AboutPage() {
     <PageShell eyebrow="About the studio" title="Your Design & Development Partner">
       <AboutSection standalone />
       <TeamSection standalone />
+      <ProcessSection />
     </PageShell>
   );
 }
@@ -775,12 +776,12 @@ function ServicesSection({ standalone = false }: { standalone?: boolean }) {
         {!standalone ? (
           <SectionHeading
             eyebrow="What we do"
-            title={<>Services built around<br />your business</>}
-            intro="A brief look at the ways we help teams plan, design, build, and maintain better digital experiences."
+            title={<>Support packages built around<br />how your business grows.</>}
+            intro="From reliable website maintenance to ongoing product and marketing support, choose the level of help that fits where your business is today."
             twoLine
           />
         ) : null}
-        <div className="services-grid">
+        <div className={`services-grid${!standalone ? " services-grid--preview" : ""}`}>
           {services.map((service) => (
             <Reveal as="article" className="service-card" key={service.title}>
               <span className="service-index">{service.index}</span>
@@ -837,13 +838,13 @@ function ProcessSection({ standalone = false }: { standalone?: boolean }) {
             </Reveal>
           ))}
         </ol>
-        {!standalone ? (
+        {/* {!standalone ? (
           <Reveal className="section-action">
             <Link className="text-link" to="/process">
               See the process
             </Link>
           </Reveal>
-        ) : null}
+        ) : null} */}
       </div>
     </section>
   );
@@ -885,13 +886,13 @@ function SampleWebsitesSection({ standalone = false }: { standalone?: boolean })
             </Reveal>
           ))}
         </div>
-        {!standalone ? (
+        {/* {!standalone ? (
           <Reveal className="section-action">
             <Link className="text-link" to="/work">
               View sample work
             </Link>
           </Reveal>
-        ) : null}
+        ) : null} */}
       </div>
     </section>
   );

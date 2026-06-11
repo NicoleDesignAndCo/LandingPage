@@ -13,28 +13,26 @@ export const site = {
 export const services = [
   {
     index: "01",
-    title: "Product Design",
-    description: "Shape product ideas into clear, usable experiences that support real business goals.",
+    title: "Website Reliability",
+    description: "Keep your website secure, updated, and online with hosting, backups, monitoring, bug fixes, and software updates.",
   },
   {
     index: "02",
-    title: "UX/UI Design",
-    description: "Plan flows, interfaces, and design systems that make digital products easier to use.",
+    title: "Website Presence",
+    description:
+      "Keep your website current, professional, and aligned with your business through quarterly reviews and approved improvements to existing pages.",
   },
   {
     index: "03",
-    title: "Web Design & Development",
-    description: "Design and build responsive websites that communicate clearly and are easy to maintain.",
+    title: "Growth Partner",
+    description:
+      "Your on-demand digital growth and support team for website updates, landing pages, marketing materials, social assets, and promotional support.",
   },
   {
     index: "04",
-    title: "Marketing Materials & Digital Assets",
-    description: "Create polished digital assets for launches, campaigns, presentations, and ongoing brand needs.",
-  },
-  {
-    index: "05",
-    title: "Digital Support Packages",
-    description: "Ongoing design and development support for businesses that need a dependable digital partner.",
+    title: "Product Design Partner",
+    description:
+      "Ongoing product design support for SaaS teams, startups, and founders who need UX/UI, prototypes, user flows, and developer handoff.",
   },
 ] as const;
 
