@@ -320,9 +320,303 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
 
 function ServicesPage() {
   return (
-    <PageShell eyebrow="What we do" title="Services built around your business">
-      <ServicesSection standalone />
-    </PageShell>
+    <>
+      <section className="page-hero">
+        <div className="container">
+          <Reveal as="p" className="eyebrow">
+            What we do
+          </Reveal>
+          <Reveal as="h1" className="page-title page-title--services">
+            Services designed to support your next stage of growth.
+          </Reveal>
+          <Reveal as="p" className="page-hero-sub">
+            From websites and digital marketing support to product design and development, we help small businesses and product teams build,
+            maintain, and improve their digital presence.
+          </Reveal>
+        </div>
+      </section>
+      <ServicesIntroSection />
+      <DigitalSupportPackagesSection />
+      <ProductSupportSection />
+      <PackageGuidanceSection />
+      <CustomEngagementsSection />
+      <CapabilitiesSection />
+      <ServicesFinalCta />
+    </>
+  );
+}
+
+const digitalSupportPackages = [
+  {
+    index: "01",
+    title: "Website Reliability",
+    price: "$99/month",
+    outcome: "Your website stays secure, updated, and online.",
+  },
+  {
+    index: "02",
+    title: "Website Presence",
+    price: "$249/month",
+    outcome: "Your website stays current, professional, and aligned with your business.",
+  },
+  {
+    index: "03",
+    title: "Growth Partner",
+    price: "Starting at $599/month",
+    outcome: "Your on-demand digital growth and support team.",
+  },
+] as const;
+
+const packageGuidance = [
+  {
+    title: "Website Reliability",
+    description: "You already have a website and simply want it secure, updated, and online.",
+  },
+  {
+    title: "Website Presence",
+    description: "You want your website reviewed, maintained, and kept aligned with your business.",
+  },
+  {
+    title: "Growth Partner",
+    description: "You need ongoing website, design, and marketing support.",
+  },
+  {
+    title: "Product Design Partner",
+    description: "You have a SaaS product, platform, or application that needs ongoing design support.",
+  },
+] as const;
+
+const productDesignIncludes = [
+  "UX/UI design",
+  "User flows",
+  "Wireframes",
+  "High-fidelity mockups",
+  "Interactive prototypes",
+  "Design systems",
+  "Developer handoff",
+  "Product recommendations",
+  "Async collaboration",
+] as const;
+
+const productDesignBestFor = ["SaaS startups", "Product teams", "Software companies", "Founders building digital products"] as const;
+
+const customEngagements = [
+  "Product design projects",
+  "SaaS feature design",
+  "Website redesigns",
+  "Frontend development support",
+  "Landing page design",
+  "Marketing campaigns",
+  "Design systems",
+  "Event and promotional assets",
+  "Marketing materials",
+  "Website migrations",
+  "Custom digital initiatives",
+] as const;
+
+const capabilities = [
+  {
+    title: "Digital Presence",
+    items: ["Website design", "Website development", "Website maintenance", "Landing pages", "SEO foundations", "Analytics setup"],
+  },
+  {
+    title: "Marketing Support",
+    items: ["Social media graphics", "Ad creative", "Brochures", "Business cards", "Event booth materials", "Email graphics", "Promotional assets"],
+  },
+  {
+    title: "Product Support",
+    items: ["Product design", "UX/UI design", "Feature flows", "Wireframes", "Prototypes", "Design systems", "Developer handoff"],
+  },
+  {
+    title: "Technical Support",
+    items: ["Frontend development", "React", "WordPress", "CMS updates", "Integrations", "Performance improvements"],
+  },
+] as const;
+
+function ServicesIntroSection() {
+  return (
+    <section className="about page-section services-intro">
+      <div className="container about-grid">
+        <Reveal as="p" className="eyebrow">
+          Digital growth support
+        </Reveal>
+        <Reveal className="about-body">
+          <h2 className="about-lead">A digital growth and support team for the work that keeps moving.</h2>
+          <p className="about-text">
+            Nicole Design &amp; Co. helps businesses and product teams maintain a stronger digital presence, improve existing experiences, and
+            move important design and development work forward without adding another full-time hire.
+          </p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function DigitalSupportPackagesSection() {
+  return (
+    <section className="services services-page-section">
+      <div className="container">
+        <SectionHeading
+          eyebrow="Digital support packages"
+          title="Ongoing support for your website, marketing, and digital presence."
+          intro="Choose the level of help that fits where your business is today."
+        />
+        <div className="services-grid services-grid--three">
+          {digitalSupportPackages.map((service) => (
+            <Reveal as="article" className="service-card service-card--package" key={service.title}>
+              <span className="service-index">{service.index}</span>
+              <h3 className="service-title">{service.title}</h3>
+              <p className="service-price">{service.price}</p>
+              <p className="service-label">Outcome:</p>
+              <p className="service-desc">{service.outcome}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProductSupportSection() {
+  return (
+    <section className="services services-page-section services-page-section--tint">
+      <div className="container">
+        <SectionHeading
+          eyebrow="Product support"
+          title="Product Design Partner"
+          intro="Ongoing product design support for teams that need help designing, improving, and shipping better digital products."
+        />
+        <Reveal as="article" className="service-card product-support-card">
+          <div className="product-support-main">
+            <span className="service-index">Starting at $1,500/month</span>
+            <h3 className="service-title">Product Design Partner</h3>
+            <p className="service-desc">
+              Ongoing product design support for teams that need help designing, improving, and shipping better digital products.
+            </p>
+            <TallyButton className="btn btn-primary">Explore Product Support</TallyButton>
+          </div>
+          <div className="product-support-lists">
+            <div>
+              <p className="service-label">Includes:</p>
+              <ul className="compact-list">
+                {productDesignIncludes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="service-label">Best for:</p>
+              <ul className="compact-list">
+                {productDesignBestFor.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function PackageGuidanceSection() {
+  return (
+    <section className="services services-page-section">
+      <div className="container">
+        <SectionHeading
+          eyebrow="Package guidance"
+          title="Which Package Is Right For You?"
+          intro="A quick way to narrow the options before you reach out."
+        />
+        <div className="work-grid guidance-grid">
+          {packageGuidance.map((item) => (
+            <Reveal as="article" className="work-card guidance-card" key={item.title}>
+              <h3 className="work-title">{item.title}</h3>
+              <p className="service-label">Choose this if:</p>
+              <p className="work-desc">{item.description}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CustomEngagementsSection() {
+  return (
+    <section className="process services-page-section">
+      <div className="container">
+        <SectionHeading
+          eyebrow="Custom engagements"
+          title="Not Seeing What You're Looking For?"
+          intro="Every business is different. Whether you need a custom website, product design support, development assistance, marketing assets, landing pages, or a combination of services, we can tailor an engagement to fit your needs."
+        />
+        <Reveal>
+          <h3 className="service-title service-title--sub">Common Custom Engagements</h3>
+          <ul className="tag-grid">
+            {customEngagements.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <Link className="btn btn-primary custom-quote-btn" to="/contact">
+            Request a Custom Quote
+          </Link>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function CapabilitiesSection() {
+  return (
+    <section className="services services-page-section">
+      <div className="container">
+        <SectionHeading
+          eyebrow="Capabilities"
+          title="The expertise behind each engagement."
+          intro="Our packages are built around outcomes, but every engagement draws from a combination of design, development, marketing, and product expertise."
+        />
+        <div className="services-grid capabilities-grid">
+          {capabilities.map((group) => (
+            <Reveal as="article" className="service-card capability-card" key={group.title}>
+              <h3 className="service-title">{group.title}</h3>
+              <ul className="compact-list">
+                {group.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ServicesFinalCta() {
+  return (
+    <section className="contact">
+      <div className="container contact-inner">
+        <Reveal as="p" className="eyebrow">
+          Get in touch
+        </Reveal>
+        <Reveal as="h2" className="contact-title">
+          Need a digital partner you can actually rely on?
+        </Reveal>
+        <Reveal as="p" className="contact-text">
+          Whether you need website support, marketing assets, product design, or ongoing digital help, we can help you choose the right starting
+          point.
+        </Reveal>
+        <Reveal className="contact-actions">
+          <Link className="btn btn-primary btn-lg" to="/contact">
+            Start a Project
+          </Link>
+          <Link className="btn btn-ghost btn-lg" to="/work">
+            View Sample Work
+          </Link>
+        </Reveal>
+      </div>
+    </section>
   );
 }
 

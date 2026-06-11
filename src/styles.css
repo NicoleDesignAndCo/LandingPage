@@ -314,6 +314,14 @@ button { font: inherit; }
   max-width: 11ch;
   text-wrap: balance;
 }
+.page-title--services { max-width: 13ch; }
+.page-hero-sub {
+  font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 960px;
+  margin-top: 1.8rem;
+}
 .page-section { padding-top: 0; }
 .page-intro { margin-top: 0; }
 
@@ -340,6 +348,9 @@ button { font: inherit; }
 .about-body .text-link { margin-top: 1.7rem; }
 
 .services { padding-block: var(--section-y); }
+.services-intro { padding-bottom: var(--section-y); }
+.services-page-section { padding-block: var(--section-y); }
+.services-page-section--tint { background: var(--beige); }
 .services-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -357,6 +368,9 @@ button { font: inherit; }
 }
 .service-card:nth-child(n+4) { grid-column: span 3; }
 .service-card:hover { background: var(--paper); }
+.services-page-section--tint .service-card { background: var(--beige); }
+.services-page-section--tint .service-card:hover { background: var(--paper); }
+.services-grid--three .service-card { grid-column: span 2; }
 .service-index {
   font-family: var(--serif);
   font-size: 0.95rem;
@@ -377,6 +391,99 @@ button { font: inherit; }
   max-width: 38ch;
 }
 .service-card .card-link { margin-top: 1.4rem; }
+.service-price {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.service-label {
+  margin-top: 1.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.service-title--sub { margin-top: 0; }
+.product-support-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  border: 1px solid var(--line-soft);
+}
+.product-support-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.product-support-main .btn { margin-top: 2rem; }
+.product-support-lists {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.product-support-lists .service-label { margin-top: 0; }
+.compact-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.compact-list li {
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.compact-list li::before {
+  content: "";
+  display: inline-block;
+  width: 0.38rem;
+  height: 0.38rem;
+  margin-right: 0.65rem;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-0.08rem);
+}
+.guidance-grid { grid-template-columns: repeat(4, 1fr); }
+.guidance-card .service-label { margin-top: 1.35rem; }
+.tag-grid {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+.tag-grid li {
+  color: var(--ink-soft);
+  padding: 0.52rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: color-mix(in srgb, var(--paper) 55%, transparent);
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+.custom-quote-btn { margin-top: 2rem; }
+.capabilities-grid .service-card {
+  grid-column: span 3;
+}
+.contact-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 2.6rem;
+}
+.contact .btn-ghost {
+  color: var(--bg);
+  border-color: rgba(251,250,246,0.28);
+}
+.contact .btn-ghost:hover {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--bg);
+}
 
 .process {
   padding-block: var(--section-y);
@@ -626,7 +733,12 @@ button { font: inherit; }
   .about-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .services-grid { grid-template-columns: 1fr; }
   .service-card,
-  .service-card:nth-child(n+4) { grid-column: auto; }
+  .service-card:nth-child(n+4),
+  .services-grid--three .service-card,
+  .capabilities-grid .service-card { grid-column: auto; }
+  .product-support-card,
+  .product-support-lists,
+  .guidance-grid { grid-template-columns: 1fr; }
   .process-list { grid-template-columns: 1fr; }
   .work-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: 1fr; gap: 2.75rem; }
