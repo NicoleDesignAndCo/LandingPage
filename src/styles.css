@@ -453,7 +453,7 @@ button { font: inherit; }
   background: var(--accent);
   transform: translateY(-0.08rem);
 }
-.guidance-grid { grid-template-columns: repeat(4, 1fr); }
+.work-grid.guidance-grid { grid-template-columns: repeat(4, 1fr); }
 .guidance-card .service-label { margin-top: 1.35rem; }
 .tag-grid {
   list-style: none;
@@ -545,7 +545,7 @@ button { font: inherit; }
 }
 .work-card {
   min-height: 100%;
-  background: var(--paper);
+  background: var(--beige);
   padding: clamp(1.8rem, 3.5vw, 2.6rem);
   display: flex;
   flex-direction: column;

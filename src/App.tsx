@@ -352,18 +352,41 @@ const digitalSupportPackages = [
     title: "Website Reliability",
     price: "$99/month",
     outcome: "Your website stays secure, updated, and online.",
+    includes: ["Hosting", "Security updates", "Backups", "Monitoring", "Bug fixes", "Software updates"],
   },
   {
     index: "02",
     title: "Website Presence",
     price: "$249/month",
     outcome: "Your website stays current, professional, and aligned with your business.",
+    includes: [
+      "Everything in Website Reliability",
+      "Quarterly website review",
+      "Website health & performance review",
+      "Content update recommendations",
+      "SEO opportunities",
+      "User experience improvements",
+      "Lead generation opportunities",
+      "Quarterly website improvements to existing pages",
+    ],
   },
   {
     index: "03",
     title: "Growth Partner",
-    price: "Starting at $599/month",
+    price: "$599/month",
     outcome: "Your on-demand digital growth and support team.",
+    includes: [
+      "Everything in Website Presence",
+      "Up to 10 hours of digital support per month",
+      "Website updates & improvements",
+      "Landing pages",
+      "Social media graphics",
+      "Ad creative",
+      "Marketing materials",
+      "Email graphics",
+      "Event & promotional assets",
+      "Priority response time (1 business day)",
+    ],
   },
 ] as const;
 
@@ -470,6 +493,12 @@ function DigitalSupportPackagesSection() {
               <p className="service-price">{service.price}</p>
               <p className="service-label">Outcome:</p>
               <p className="service-desc">{service.outcome}</p>
+              <p className="service-label">What's Included:</p>
+              <ul className="compact-list">
+                {service.includes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </Reveal>
           ))}
         </div>
