@@ -1,6 +1,6 @@
 import { ElementType, ReactNode, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { processSteps, services, site, team } from "./data";
 import { useReveal, useScrolled } from "./hooks";
 
@@ -8,7 +8,6 @@ const navItems = [
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
   { to: "/process", label: "How We Work" },
-  { to: "/team", label: "Team" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -30,10 +29,6 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: "How We Work | Nicole Design & Co.",
     description: "A simple, considered process for discovery, design, and implementation.",
   },
-  "/team": {
-    title: "Team | Nicole Design & Co.",
-    description: "Meet the design and development team behind Nicole Design & Co.",
-  },
   "/contact": {
     title: "Contact | Nicole Design & Co.",
     description: "Start a project with Nicole Design & Co. or email hello@nicoledesignandco.com.",
@@ -48,7 +43,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/process" element={<ProcessPage />} />
-        <Route path="/team" element={<TeamPage />} />
+        <Route path="/team" element={<Navigate to="/about" replace />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </Layout>
@@ -252,7 +247,7 @@ function Hero() {
         </Reveal>
         <Reveal className="hero-actions">
           <TallyButton className="btn btn-primary">Start a Project</TallyButton>
-          <Link to="/team" className="btn btn-ghost">
+          <Link to="/about" className="btn btn-ghost">
             Meet the Team
           </Link>
         </Reveal>
@@ -274,6 +269,7 @@ function AboutPage() {
   return (
     <PageShell eyebrow="About the studio" title="Your Design & Development Partner">
       <AboutSection standalone />
+      <TeamSection standalone />
     </PageShell>
   );
 }
@@ -359,17 +355,9 @@ function ProcessSection({ standalone = false }: { standalone?: boolean }) {
   );
 }
 
-function TeamPage() {
-  return (
-    <PageShell eyebrow="The people" title="The people behind the work.">
-      <TeamSection standalone />
-    </PageShell>
-  );
-}
-
 function TeamSection({ standalone = false }: { standalone?: boolean }) {
   return (
-    <section className={`team${standalone ? " page-section" : ""}`}>
+    <section className={`team${standalone ? " team--page page-section" : ""}`}>
       <div className="container">
         {!standalone ? (
           <SectionHeading
@@ -379,6 +367,8 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
           />
         ) : (
           <Reveal className="section-head section-head--wide">
+            <p className="eyebrow">The people</p>
+            <h2 className="section-title">The people behind the work.</h2>
             <p className="section-intro page-intro">
               Nicole Design &amp; Co. combines design strategy and development expertise. Explore our individual portfolios to learn more about
               our experience and selected projects.

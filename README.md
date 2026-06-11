@@ -9,7 +9,7 @@ A Vite + React + TypeScript site for Nicole Design & Co. The site uses real brow
 | Vite | Local dev server and production build |
 | React | Component-based UI |
 | TypeScript | Typed components and content data |
-| React Router | Browser routes like `/services` and `/team` |
+| React Router | Browser routes like `/about` and `/services` |
 | React Helmet Async | Route-level SEO metadata |
 
 ## Routes
@@ -17,10 +17,9 @@ A Vite + React + TypeScript site for Nicole Design & Co. The site uses real brow
 | Route | Page |
 |------|------|
 | `/` | Full landing page |
-| `/about` | About |
+| `/about` | About and Team |
 | `/services` | Services |
 | `/process` | How We Work |
-| `/team` | Team |
 | `/contact` | Contact |
 
 ## Local Development
@@ -47,7 +46,7 @@ Use the Vite defaults:
 | Build Command | `npm run build` |
 | Output Directory | `dist` |
 
-`vercel.json` rewrites all route requests to `index.html`, so direct visits such as `/services` or `/team` work after deployment.
+`vercel.json` rewrites all route requests to `index.html`, so direct visits such as `/services` or `/about` work after deployment. Legacy `/team` visits redirect to `/about`.
 
 ## Updating Content
 
