@@ -4,6 +4,25 @@ import { Link, Navigate, NavLink, Route, Routes, useLocation } from "react-route
 import { processSteps, sampleWebsites, services, site, team } from "./data";
 import { useReveal, useScrolled } from "./hooks";
 
+declare global {
+  interface Window {
+    Tally?: {
+      loadEmbeds?: () => void;
+      openPopup?: (
+        formId: string,
+        options?: {
+          layout?: "default" | "modal";
+          width?: number;
+          emoji?: {
+            text?: string;
+            animation?: "none" | "wave" | "tada" | "heart-beat" | "spin" | "flash" | "bounce" | "rubber-band" | "head-shake";
+          };
+        },
+      ) => void;
+    };
+  }
+}
+
 const navItems = [
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
@@ -31,8 +50,9 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     description: "A simple, considered process for discovery, design, and implementation.",
   },
   "/work": {
-    title: "Work | Nicole Design & Co.",
-    description: "Sample website concepts from Nicole Design & Co. for service businesses, real estate, and hospitality brands.",
+    title: "Sample Websites | Nicole Design & Co.",
+    description:
+      "Explore sample websites created for different types of small businesses and see how professional websites support trust, leads, ecommerce, and digital growth.",
   },
   "/team": {
     title: "Team | Nicole Design & Co.",
@@ -40,7 +60,7 @@ const pageMeta: Record<string, { title: string; description: string }> = {
   },
   "/contact": {
     title: "Contact | Nicole Design & Co.",
-    description: "Start a project with Nicole Design & Co. or email hello@nicoledesignandco.com.",
+    description: "Start an inquiry with Nicole Design & Co. through the Tally inquiry bubble or email hello@nicoledesignandco.com.",
   },
 };
 
@@ -71,11 +91,44 @@ function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <Seo />
+      <TallyEmbedLoader />
       <Header />
       <main>{children}</main>
+      <TallyFloatingButton />
       <Footer />
     </>
   );
+}
+
+function TallyEmbedLoader() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const scriptId = "tally-embed-script";
+    const existingScript = document.getElementById(scriptId) as HTMLScriptElement | null;
+
+    const loadTallyEmbeds = () => {
+      window.Tally?.loadEmbeds?.();
+    };
+
+    if (existingScript) {
+      loadTallyEmbeds();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = scriptId;
+    script.src = "https://tally.so/widgets/embed.js";
+    script.async = true;
+    script.onload = loadTallyEmbeds;
+    document.body.appendChild(script);
+  }, []);
+
+  useEffect(() => {
+    window.Tally?.loadEmbeds?.();
+  }, [location.pathname]);
+
+  return null;
 }
 
 function Seo() {
@@ -183,17 +236,42 @@ function Brand({ footer = false }: { footer?: boolean }) {
   );
 }
 
+function openTallyPopup() {
+  if (window.Tally?.openPopup) {
+    window.Tally.openPopup(site.tallyFormId, {
+      layout: "modal",
+      width: 700,
+      emoji: {
+        text: "👋",
+        animation: "wave",
+      },
+    });
+    return;
+  }
+
+  window.open(site.tallyUrl, "_blank", "noopener,noreferrer");
+}
+
 function TallyButton({ children, className }: { children: ReactNode; className: string }) {
   return (
     <button
       type="button"
       className={className}
-      data-tally-open={site.tallyFormId}
-      data-tally-emoji-text="👋"
-      data-tally-emoji-animation="wave"
+      onClick={openTallyPopup}
     >
       {children}
     </button>
+  );
+}
+
+function TallyFloatingButton() {
+  return (
+    <TallyButton className="tally-floating-button">
+      <span className="tally-floating-button__icon" aria-hidden="true">
+        +
+      </span>
+      <span className="tally-floating-button__text">Start an Inquiry</span>
+    </TallyButton>
   );
 }
 
@@ -437,6 +515,50 @@ const customEngagements = [
   "Custom digital initiatives",
 ] as const;
 
+const contactInquiryOptions = [
+  {
+    title: "Website Support",
+    description: "For businesses that need help keeping their website secure, updated, and running smoothly.",
+  },
+  {
+    title: "Digital Growth Support",
+    description: "For businesses that need ongoing website updates, marketing materials, landing pages, or social media assets.",
+  },
+  {
+    title: "Product Design Support",
+    description: "For SaaS teams, startups, or founders who need UX/UI design, product flows, prototypes, or design systems.",
+  },
+  {
+    title: "Custom Projects",
+    description:
+      "For website redesigns, frontend development, landing pages, marketing assets, or projects that do not fit neatly into a package.",
+  },
+] as const;
+
+const contactChecklist = [
+  "Your business name",
+  "What you need help with",
+  "Your website or product link, if available",
+  "Any timeline you have in mind",
+  "Your budget range, if you already know it",
+  "The best way to reach you",
+] as const;
+
+const contactNextSteps = [
+  {
+    title: "Send an Inquiry",
+    description: "Use the Tally bubble to tell us what you need help with.",
+  },
+  {
+    title: "We'll Review Your Request",
+    description: "We'll look at your business, website, or product and determine the best starting point.",
+  },
+  {
+    title: "We'll Follow Up",
+    description: "If it feels like a good fit, we'll reach out with next steps, questions, or a recommended package.",
+  },
+] as const;
+
 const capabilities = [
   {
     title: "Digital Presence",
@@ -588,9 +710,7 @@ function CustomEngagementsSection() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <Link className="btn btn-primary custom-quote-btn" to="/contact">
-            Request a Custom Quote
-          </Link>
+          <TallyButton className="btn btn-primary custom-quote-btn">Request a Custom Quote</TallyButton>
         </Reveal>
       </div>
     </section>
@@ -638,9 +758,7 @@ function ServicesFinalCta() {
           point.
         </Reveal>
         <Reveal className="contact-actions">
-          <Link className="btn btn-primary btn-lg" to="/contact">
-            Start a Project
-          </Link>
+          <TallyButton className="btn btn-primary btn-lg">Start a Project</TallyButton>
           <Link className="btn btn-ghost btn-lg" to="/work">
             View Sample Work
           </Link>
@@ -733,8 +851,13 @@ function ProcessSection({ standalone = false }: { standalone?: boolean }) {
 
 function WorkPage() {
   return (
-    <PageShell eyebrow="Selected work" title="Sample websites with a practical point of view">
+    <PageShell
+      eyebrow="Selected work"
+      title="Sample Websites"
+      intro="Explore sample websites created for different types of small businesses. Each demo shows how a professional website can support trust, lead generation, ecommerce, and ongoing digital growth."
+    >
       <SampleWebsitesSection standalone />
+      <WorkFinalCta />
     </PageShell>
   );
 }
@@ -754,6 +877,7 @@ function SampleWebsitesSection({ standalone = false }: { standalone?: boolean })
           {sampleWebsites.map((website) => (
             <Reveal as="article" className="work-card" key={website.title}>
               <h3 className="work-title">{website.title}</h3>
+              <p className="work-type">{website.businessType}</p>
               <p className="work-desc">{website.description}</p>
               <a className="card-link" href={website.url} target="_blank" rel="noopener">
                 View Demo<span className="link-arrow" aria-hidden="true">↗</span>
@@ -768,6 +892,21 @@ function SampleWebsitesSection({ standalone = false }: { standalone?: boolean })
             </Link>
           </Reveal>
         ) : null}
+      </div>
+    </section>
+  );
+}
+
+function WorkFinalCta() {
+  return (
+    <section className="work-cta">
+      <div className="container work-cta-inner">
+        <Reveal as="h2" className="work-cta-title">
+          Want something like this for your business?
+        </Reveal>
+        <Reveal>
+          <TallyButton className="btn btn-primary btn-lg">Start a Project</TallyButton>
+        </Reveal>
       </div>
     </section>
   );
@@ -846,7 +985,111 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
 }
 
 function ContactPage() {
-  return <ContactSection standalone />;
+  return (
+    <>
+      <section className="contact-page-hero">
+        <div className="container contact-page-hero__inner">
+          <Reveal as="p" className="eyebrow">
+            Contact
+          </Reveal>
+          <Reveal as="h1" className="page-title contact-page-title">
+            Let's Talk About What You're Building
+          </Reveal>
+          <Reveal as="p" className="page-hero-sub contact-page-sub">
+            Whether you need a new website, ongoing digital support, product design, or custom development help, start by sending us a quick note
+            through the inquiry bubble.
+          </Reveal>
+          <Reveal className="hero-actions">
+            <TallyButton className="btn btn-primary">Start a Project</TallyButton>
+            <Link to="/services" className="btn btn-ghost">
+              View Services
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="services contact-page-section contact-page-section--tint">
+        <div className="container">
+          <SectionHeading eyebrow="Inquiry options" title="What Can We Help With?" />
+          <div className="services-grid contact-options-grid">
+            {contactInquiryOptions.map((option) => (
+              <Reveal as="article" className="service-card contact-option-card" key={option.title}>
+                <h3 className="service-title">{option.title}</h3>
+                <p className="service-desc">{option.description}</p>
+                <TallyButton className="card-link contact-card-cta">Start an Inquiry</TallyButton>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="contact-page-section contact-page-section--white">
+        <div className="container contact-info-grid">
+          <Reveal>
+            <p className="eyebrow">Helpful details</p>
+            <h2 className="section-title">What Should You Include?</h2>
+            <p className="section-intro">You do not need to have everything figured out. A short message is enough to start.</p>
+          </Reveal>
+          <Reveal>
+            <ul className="compact-list contact-checklist">
+              {contactChecklist.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="process contact-page-section contact-page-section--tint">
+        <div className="container">
+          <SectionHeading eyebrow="Process" title="What Happens Next?" />
+          <ol className="process-list">
+            {contactNextSteps.map((step, index) => (
+              <Reveal as="li" className="process-step" key={step.title}>
+                <span className="process-num">{String(index + 1).padStart(2, "0")}</span>
+                <div className="process-body">
+                  <h3 className="process-title">{step.title}</h3>
+                  <p className="process-desc">{step.description}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="contact-page-section contact-page-section--white">
+        <div className="container contact-info-grid">
+          <Reveal>
+            <p className="eyebrow">Alternative contact</p>
+            <h2 className="section-title">Prefer Email?</h2>
+            <p className="section-intro">You can also reach us directly at:</p>
+          </Reveal>
+          <Reveal className="contact-direct">
+            <p className="footer-label">Email</p>
+            <a className="contact-direct__link" href={`mailto:${site.email}`}>
+              {site.email}
+            </a>
+            <p className="footer-label">Location</p>
+            <p>{site.location}</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="contact">
+        <div className="container contact-inner">
+          <Reveal as="h2" className="contact-title">
+            Ready to Start?
+          </Reveal>
+          <Reveal as="p" className="contact-text">
+            Use the inquiry bubble to tell us what you're working on. We'll take it from there.
+          </Reveal>
+          <Reveal className="contact-actions">
+            <TallyButton className="btn btn-primary btn-lg">Start a Project</TallyButton>
+          </Reveal>
+        </div>
+      </section>
+    </>
+  );
 }
 
 function ContactSection({ standalone = false }: { standalone?: boolean }) {
@@ -876,7 +1119,7 @@ function ContactSection({ standalone = false }: { standalone?: boolean }) {
   );
 }
 
-function PageShell({ eyebrow, title, children }: { eyebrow: string; title: string; children: ReactNode }) {
+function PageShell({ eyebrow, title, intro, children }: { eyebrow: string; title: string; intro?: string; children: ReactNode }) {
   return (
     <>
       <section className="page-hero">
@@ -887,6 +1130,11 @@ function PageShell({ eyebrow, title, children }: { eyebrow: string; title: strin
           <Reveal as="h1" className="page-title">
             {title}
           </Reveal>
+          {intro ? (
+            <Reveal as="p" className="page-hero-sub">
+              {intro}
+            </Reveal>
+          ) : null}
         </div>
       </section>
       {children}

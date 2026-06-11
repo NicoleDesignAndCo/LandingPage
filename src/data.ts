@@ -7,6 +7,7 @@ export const site = {
   email: "hello@nicoledesignandco.com",
   location: "Edmonton, Alberta",
   tallyFormId: "xXzMGr",
+  tallyUrl: "https://tally.so/r/xXzMGr",
 };
 
 export const services = [
@@ -40,17 +41,23 @@ export const services = [
 export const sampleWebsites = [
   {
     title: "Maya Bennett Real Estate",
-    description: "A polished real estate website concept built around trust, local expertise, and clear property discovery.",
+    businessType: "Independent Realtor",
+    description:
+      "A personal brand website for an independent realtor, featuring listings, buying and selling pages, lead capture, and a single property listing page.",
     url: "https://maya-bennett.vercel.app/",
   },
   {
     title: "Serene Paths Clinic",
-    description: "A calm clinic website concept with accessible service information and a warm path toward booking.",
+    businessType: "Therapist / Coach / Wellness Provider",
+    description:
+      "A calm, professional website for a therapist, coach, or wellness provider, featuring services, resources, consultation booking, and trust-building content.",
     url: "https://serene-paths.vercel.app/",
   },
   {
     title: "North Peak Coffee Co.",
-    description: "A focused coffee brand website concept with product storytelling, location details, and ecommerce-ready structure.",
+    businessType: "Local Ecommerce",
+    description:
+      "A small ecommerce website for a local coffee roaster, featuring product browsing, product detail pages, cart experience, and brand storytelling.",
     url: "https://north-peak-coffee-co.vercel.app/",
   },
 ] as const;
