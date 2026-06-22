@@ -60,6 +60,45 @@ export const sampleWebsites = [
   },
 ] as const;
 
+export const studioWork = [
+  {
+    title: "Hudsons Canada's Pub",
+    businessType: "Web Design / WordPress",
+    description:
+      "Full website redesign for a multi-location Canadian pub chain, improving mobile experience, reservations flow, and CMS flexibility.",
+    url: "https://nicole-buloran.com/work/restaurant-website-redesign",
+  },
+  {
+    title: "InnQuest Canada",
+    businessType: "Web Design / CRM Integration",
+    description:
+      "Full website redesign and Zoho CRM integration for a global hospitality software company, automating lead capture and support ticket routing.",
+    url: "https://nicole-buloran.com/work/innquest-canada-website",
+  },
+  {
+    title: "Inphonite",
+    businessType: "Product Design / Prototyping",
+    description:
+      "Multi-screen onboarding flow and interactive prototype for a healthcare communication platform serving dental practices.",
+    url: "https://nicole-buloran.com/work/message-blast",
+  },
+] as const;
+
+export const founderWork = [
+  {
+    title: "Nicole Buloran",
+    businessType: "Founder & Product Designer",
+    description: "9+ years in product design, UX/UI, SaaS, and web.",
+    url: "https://nicole-buloran.com/work",
+  },
+  {
+    title: "Nick Castillo",
+    businessType: "Developer",
+    description: "Full-stack development, SaaS integrations, and software implementation.",
+    url: "https://nick-castillo.ca",
+  },
+] as const;
+
 export const processSteps = [
   {
     index: "01",

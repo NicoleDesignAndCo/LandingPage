@@ -1,7 +1,7 @@
 import { ElementType, ReactNode, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
-import { processSteps, sampleWebsites, services, site, team } from "./data";
+import { founderWork, processSteps, sampleWebsites, services, site, studioWork, team } from "./data";
 import { useReveal, useScrolled } from "./hooks";
 
 declare global {
@@ -50,9 +50,9 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     description: "A simple, considered process for discovery, design, and implementation.",
   },
   "/work": {
-    title: "Sample Websites | Nicole Design & Co.",
+    title: "Selected Work | Nicole Design & Co.",
     description:
-      "Explore sample websites created for different types of small businesses and see how professional websites support trust, leads, ecommerce, and digital growth.",
+      "A mix of studio projects, founder work, and demos from Nicole Design & Co.",
   },
   "/team": {
     title: "Team | Nicole Design & Co.",
@@ -325,13 +325,14 @@ function Hero() {
     <section className="hero">
       <div className="container">
         <Reveal as="p" className="eyebrow">
-          Design. Develop. Support. <span className="italic">Growing Businesses</span>
+          Product Design · Web Development · Digital Support
         </Reveal>
         <Reveal as="h1" className="hero-title">
-          Nicole Design <span className="amp">&amp;</span> Co.
+          Years of experience. Now fully yours.
         </Reveal>
         <Reveal as="p" className="hero-sub">
-          Product design, websites, and development for businesses ready to build better digital experiences.
+          Nicole Design &amp; Co. brings together product design and full-stack development — the same expertise behind real SaaS products,
+          enterprise websites, and healthcare platforms. Now available full time.
         </Reveal>
         <Reveal className="hero-actions">
           <TallyButton className="btn btn-primary">Start a Project</TallyButton>
@@ -384,7 +385,8 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
           ) : (
             <>
               <p className="about-text">
-                Nicole Design &amp; Co. is a small design and development studio helping businesses create clearer, more useful digital experiences.
+                We&apos;ve spent years doing this work at a high level across SaaS, hospitality, healthcare, and more. Now we&apos;re doing it for you
+                full time.
               </p>
               <Link className="text-link" to="/about">
                 Learn about the studio
@@ -854,12 +856,60 @@ function WorkPage() {
   return (
     <PageShell
       eyebrow="Selected work"
-      title="Sample Websites"
-      intro="Explore sample websites created for different types of small businesses. Each demo shows how a professional website can support trust, lead generation, ecommerce, and ongoing digital growth."
+      title="Selected Work"
+      intro="A mix of studio projects, founder work, and demos showing what we build."
     >
-      <SampleWebsitesSection standalone />
+      <WorkSection title="Studio Work" items={studioWork} linkLabel="View Project" />
+      <WorkSection title="Founder Work" items={founderWork} linkLabel="View Portfolio" alternate />
+      <WorkSection
+        title="Sample Sites"
+        intro="Demos showing what we can build across different industries."
+        items={sampleWebsites}
+        linkLabel="View Demo"
+      />
       <WorkFinalCta />
     </PageShell>
+  );
+}
+
+type WorkItem = {
+  title: string;
+  businessType: string;
+  description: string;
+  url: string;
+};
+
+function WorkSection({
+  title,
+  intro,
+  items,
+  linkLabel,
+  alternate = false,
+}: {
+  title: string;
+  intro?: string;
+  items: readonly WorkItem[];
+  linkLabel: string;
+  alternate?: boolean;
+}) {
+  return (
+    <section className={`work-collection${alternate ? " work-collection--alternate" : ""}`}>
+      <div className="container">
+        <SectionHeading eyebrow="Selected work" title={title} intro={intro} />
+        <div className={`work-grid${items.length === 2 ? " work-grid--two" : ""}`}>
+          {items.map((item) => (
+            <Reveal as="article" className="work-card" key={item.title}>
+              <h3 className="work-title">{item.title}</h3>
+              <p className="work-type">{item.businessType}</p>
+              <p className="work-desc">{item.description}</p>
+              <a className="card-link" href={item.url} target="_blank" rel="noopener noreferrer">
+                {linkLabel}<span className="link-arrow" aria-hidden="true">↗</span>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

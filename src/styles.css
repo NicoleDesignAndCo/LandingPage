@@ -634,6 +634,12 @@ button { font: inherit; }
   padding-block: var(--section-y);
   background: var(--bg);
 }
+.work-collection {
+  padding-block: var(--section-y);
+  background: var(--bg);
+}
+.work-collection--alternate { background: var(--paper); }
+.work-collection--alternate .work-card { background: var(--bg); }
 .work-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -643,6 +649,7 @@ button { font: inherit; }
   border-radius: var(--radius);
   overflow: hidden;
 }
+.work-grid--two { grid-template-columns: repeat(2, 1fr); }
 .work-card {
   min-height: 100%;
   background: var(--beige);
@@ -877,7 +884,8 @@ button { font: inherit; }
   .contact-info-grid,
   .guidance-grid { grid-template-columns: 1fr; }
   .process-list { grid-template-columns: 1fr; }
-  .work-grid { grid-template-columns: 1fr; }
+  .work-grid,
+  .work-grid--two { grid-template-columns: 1fr; }
   .contact-options-grid .contact-option-card { grid-column: auto; }
   .work-cta-inner { align-items: flex-start; flex-direction: column; }
   .team-grid { grid-template-columns: 1fr; gap: 2.75rem; }
