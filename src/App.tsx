@@ -1,7 +1,7 @@
 import { ElementType, ReactNode, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
-import { founderWork, processSteps, sampleWebsites, services, site, studioWork, team } from "./data";
+import { Link, Navigate, NavLink, Route, Routes, useLocation, useParams, useSearchParams } from "react-router-dom";
+import { founderWork, insights, processSteps, sampleWebsites, services, site, studioWork, team } from "./data";
 import { useReveal, useScrolled } from "./hooks";
 
 declare global {
@@ -27,6 +27,7 @@ const navItems = [
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
   { to: "/work", label: "Work" },
+  { to: "/insights", label: "Insights" },
   // { to: "/process", label: "How We Work" },
   { to: "/contact", label: "Contact" },
 ];
@@ -58,6 +59,10 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: "Team | Nicole Design & Co.",
     description: "Meet Nicole Buloran and Nick Castillo, the design and development team behind Nicole Design & Co.",
   },
+  "/insights": {
+    title: "Insights | Nicole Design & Co.",
+    description: "Practical notes about websites, social media, and building a stronger digital presence.",
+  },
   "/contact": {
     title: "Contact | Nicole Design & Co.",
     description: "Start an inquiry with Nicole Design & Co. through the Tally inquiry bubble or email hello@nicoledesignandco.com.",
@@ -74,6 +79,8 @@ function App() {
         <Route path="/process" element={<ProcessPage />} />
         <Route path="/work" element={<WorkPage />} />
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/insights" element={<InsightsPage />} />
+        <Route path="/insights/:slug" element={<InsightArticlePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -315,6 +322,7 @@ function HomePage() {
       <ProcessSection />
       <SampleWebsitesSection />
       <TeamSection />
+      <InsightsPreviewSection />
       <ContactSection />
     </>
   );
@@ -968,6 +976,208 @@ function TeamPage() {
     <PageShell eyebrow="The team" title="Two people, one thoughtful workflow">
       <TeamSection standalone />
     </PageShell>
+  );
+}
+
+const INSIGHTS_PER_PAGE = 3;
+
+function InsightsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedPage = Number(searchParams.get("page") ?? "1");
+  const pageCount = Math.ceil(insights.length / INSIGHTS_PER_PAGE);
+  const currentPage = Number.isInteger(requestedPage) && requestedPage >= 1 && requestedPage <= pageCount ? requestedPage : 1;
+  const visibleInsights = insights.slice((currentPage - 1) * INSIGHTS_PER_PAGE, currentPage * INSIGHTS_PER_PAGE);
+
+  const changePage = (page: number) => {
+    setSearchParams(page === 1 ? {} : { page: String(page) });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <>
+      <section className="page-hero insights-hero">
+        <div className="container insights-hero__grid">
+          <div>
+            <Reveal as="p" className="eyebrow">
+              Ideas for a better digital presence
+            </Reveal>
+            <Reveal as="h1" className="page-title page-title--insights">
+              Useful things, clearly explained.
+            </Reveal>
+          </div>
+          <Reveal as="p" className="page-hero-sub insights-hero__intro">
+            Practical notes about websites, social media, and the small decisions that help your business show up better online.
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="insights-index" aria-labelledby="insights-heading">
+        <div className="container">
+          <div className="insights-index__head">
+            <h2 id="insights-heading" className="insights-index__title">Latest insights</h2>
+            <p className="insights-index__count">Showing {visibleInsights.length} of {insights.length}</p>
+          </div>
+          <div className="insights-grid">
+            {visibleInsights.map((article, index) => (
+              <Reveal as="article" className="insight-card" key={article.slug}>
+                <Link className={`insight-card__visual insight-card__visual--${article.accent}`} to={`/insights/${article.slug}`} aria-hidden="true" tabIndex={-1}>
+                  <span>{String((currentPage - 1) * INSIGHTS_PER_PAGE + index + 1).padStart(2, "0")}</span>
+                  <span className="insight-card__shape" />
+                </Link>
+                <div className="insight-card__body">
+                  <div className="insight-card__meta">
+                    <span>{article.category}</span>
+                    <span>{article.readTime}</span>
+                  </div>
+                  <h3 className="insight-card__title">
+                    <Link to={`/insights/${article.slug}`}>{article.title}</Link>
+                  </h3>
+                  <p className="insight-card__excerpt">{article.excerpt}</p>
+                  <Link className="insight-card__link" to={`/insights/${article.slug}`}>
+                    Read insight <span aria-hidden="true">↗</span>
+                  </Link>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <nav className="pagination" aria-label="Insights pagination">
+            <button type="button" onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1} aria-label="Previous page">
+              <span aria-hidden="true">←</span> Previous
+            </button>
+            <div className="pagination__pages">
+              {Array.from({ length: pageCount }, (_, index) => index + 1).map((page) => (
+                <button
+                  type="button"
+                  className={page === currentPage ? "active" : ""}
+                  onClick={() => changePage(page)}
+                  aria-current={page === currentPage ? "page" : undefined}
+                  aria-label={`Page ${page}`}
+                  key={page}
+                >
+                  {String(page).padStart(2, "0")}
+                </button>
+              ))}
+            </div>
+            <button type="button" onClick={() => changePage(currentPage + 1)} disabled={currentPage === pageCount} aria-label="Next page">
+              Next <span aria-hidden="true">→</span>
+            </button>
+          </nav>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function InsightsPreviewSection() {
+  return (
+    <section className="insights-preview">
+      <div className="container">
+        <div className="insights-preview__head">
+          <SectionHeading
+            eyebrow="Ideas for a better digital presence"
+            title="A few useful things, clearly explained."
+            intro="Practical notes about websites, social media, and showing up better online."
+          />
+          <Reveal>
+            <Link className="btn btn-ghost" to="/insights">
+              Explore all insights <span aria-hidden="true">→</span>
+            </Link>
+          </Reveal>
+        </div>
+        <div className="insights-grid">
+          {insights.slice(0, 3).map((article, index) => (
+            <Reveal as="article" className="insight-card" key={article.slug}>
+              <Link
+                className={`insight-card__visual insight-card__visual--${article.accent}`}
+                to={`/insights/${article.slug}`}
+                aria-hidden="true"
+                tabIndex={-1}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span className="insight-card__shape" />
+              </Link>
+              <div className="insight-card__body">
+                <div className="insight-card__meta">
+                  <span>{article.category}</span>
+                  <span>{article.readTime}</span>
+                </div>
+                <h3 className="insight-card__title">
+                  <Link to={`/insights/${article.slug}`}>{article.title}</Link>
+                </h3>
+                <p className="insight-card__excerpt">{article.excerpt}</p>
+                <Link className="insight-card__link" to={`/insights/${article.slug}`}>
+                  Read insight <span aria-hidden="true">↗</span>
+                </Link>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal className="insights-preview__mobile-action">
+          <Link className="btn btn-ghost" to="/insights">
+            Explore all insights <span aria-hidden="true">→</span>
+          </Link>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function InsightArticlePage() {
+  const { slug } = useParams();
+  const article = insights.find((item) => item.slug === slug);
+
+  if (!article) {
+    return <Navigate to="/insights" replace />;
+  }
+
+  return (
+    <>
+      <Helmet>
+        <title>{article.title} | Nicole Design &amp; Co.</title>
+        <meta name="description" content={article.excerpt} />
+        <link rel="canonical" href={`${site.domain}/insights/${article.slug}`} />
+      </Helmet>
+      <article className="article">
+        <header className="article-hero">
+          <div className="container article-hero__inner">
+            <Reveal>
+              <Link className="article-back" to="/insights">← All insights</Link>
+            </Reveal>
+            <Reveal className="article-meta">
+              <span>{article.category}</span>
+              <span>{article.date}</span>
+              <span>{article.readTime}</span>
+            </Reveal>
+            <Reveal as="h1" className="article-title">{article.title}</Reveal>
+            <Reveal as="p" className="article-deck">{article.excerpt}</Reveal>
+          </div>
+        </header>
+        <div className="container article-layout">
+          <aside className="article-aside">
+            <p className="eyebrow">In this insight</p>
+            <ol>
+              {article.sections.map((section) => <li key={section.heading}>{section.heading}</li>)}
+            </ol>
+          </aside>
+          <div className="article-content">
+            <p className="article-intro">{article.intro}</p>
+            {article.sections.map((section) => (
+              <section key={section.heading}>
+                <h2>{section.heading}</h2>
+                <p>{section.body}</p>
+              </section>
+            ))}
+            <div className="article-note">
+              <p className="eyebrow">A final thought</p>
+              <h2>Small improvements compound.</h2>
+              <p>You do not need to fix everything at once. Choose the clearest next step, make it useful, and keep paying attention.</p>
+            </div>
+            <Link className="article-back article-back--bottom" to="/insights">← Back to all insights</Link>
+          </div>
+        </div>
+      </article>
+    </>
   );
 }
 
