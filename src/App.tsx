@@ -1131,6 +1131,12 @@ function InsightArticlePage() {
     return <Navigate to="/insights" replace />;
   }
 
+  const articleIndex = insights.findIndex((item) => item.slug === article.slug);
+  const relatedInsights = Array.from(
+    { length: 3 },
+    (_, index) => insights[(articleIndex + index + 1) % insights.length],
+  );
+
   return (
     <>
       <Helmet>
@@ -1176,6 +1182,49 @@ function InsightArticlePage() {
             <Link className="article-back article-back--bottom" to="/insights">← Back to all insights</Link>
           </div>
         </div>
+        <section className="related-insights" aria-labelledby="related-insights-title">
+          <div className="container">
+            <div className="related-insights__head">
+              <div>
+                <p className="eyebrow">Keep exploring</p>
+                <h2 className="section-title" id="related-insights-title">Related insights</h2>
+              </div>
+              <Link className="text-link" to="/insights">View all insights →</Link>
+            </div>
+            <div className="insights-grid">
+              {relatedInsights.map((relatedArticle) => {
+                const relatedIndex = insights.findIndex((item) => item.slug === relatedArticle.slug);
+
+                return (
+                  <Reveal as="article" className="insight-card" key={relatedArticle.slug}>
+                    <Link
+                      className={`insight-card__visual insight-card__visual--${relatedArticle.accent}`}
+                      to={`/insights/${relatedArticle.slug}`}
+                      aria-hidden="true"
+                      tabIndex={-1}
+                    >
+                      <span>{String(relatedIndex + 1).padStart(2, "0")}</span>
+                      <span className="insight-card__shape" />
+                    </Link>
+                    <div className="insight-card__body">
+                      <div className="insight-card__meta">
+                        <span>{relatedArticle.category}</span>
+                        <span>{relatedArticle.readTime}</span>
+                      </div>
+                      <h3 className="insight-card__title">
+                        <Link to={`/insights/${relatedArticle.slug}`}>{relatedArticle.title}</Link>
+                      </h3>
+                      <p className="insight-card__excerpt">{relatedArticle.excerpt}</p>
+                      <Link className="insight-card__link" to={`/insights/${relatedArticle.slug}`}>
+                        Read insight <span aria-hidden="true">↗</span>
+                      </Link>
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
       </article>
     </>
   );

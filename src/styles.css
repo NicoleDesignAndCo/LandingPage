@@ -946,6 +946,21 @@ button { font: inherit; }
 }
 .article-note h2 { margin-top: 0.9rem; }
 .article-back--bottom { margin-top: 3rem; }
+.related-insights {
+  padding-block: var(--section-y);
+  background: var(--paper);
+  border-top: 1px solid var(--line-soft);
+}
+.related-insights__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.related-insights__head .section-title { margin-top: 0.9rem; }
+.related-insights .insights-grid {
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+}
 
 .work-cta {
   padding-block: clamp(4.5rem, 10vh, 7rem);
@@ -1180,6 +1195,10 @@ button { font: inherit; }
   .pagination__pages { justify-content: center; }
   .pagination > button { font-size: 0; }
   .pagination > button span { font-size: 1rem; }
+  .related-insights__head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
   .tally-floating-button {
     right: max(0.75rem, env(safe-area-inset-right));
     bottom: max(0.75rem, env(safe-area-inset-bottom));
