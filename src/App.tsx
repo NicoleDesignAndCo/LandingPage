@@ -92,8 +92,11 @@ function Layout({ children }: { children: ReactNode }) {
     <>
       <Seo />
       <TallyEmbedLoader />
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <Header />
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>{children}</main>
       <TallyFloatingButton />
       <Footer />
     </>
@@ -186,6 +189,17 @@ function Header() {
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
 
   return (
     <header className={`site-header${scrolled ? " scrolled" : ""}`} id="siteHeader">
@@ -311,6 +325,7 @@ function HomePage() {
     <>
       <Hero />
       <AboutSection />
+      <DeliverablesShowcase />
       <ServicesSection />
       <ProcessSection />
       <SampleWebsitesSection />
@@ -320,25 +335,107 @@ function HomePage() {
   );
 }
 
+function DeliverablesShowcase() {
+  return (
+    <section className="deliverables-showcase" aria-label="Examples of studio deliverables">
+      <div className="container deliverables-layout">
+        <Reveal className="deliverables-copy">
+          <p className="eyebrow">From idea to interface</p>
+          <h2 className="section-title">The things your customers actually see and use.</h2>
+          <p className="section-intro">Websites, product flows, and launch-ready digital assets — designed as one connected experience.</p>
+        </Reveal>
+        <Reveal className="deliverables-canvas">
+          <div className="deliverable-browser">
+            <BrowserBar label="yourbrand.com" />
+            <div className="deliverable-site">
+              <span className="mini-nav" />
+              <strong>Make your next<br />move feel simple.</strong>
+              <span className="mini-button">Get started</span>
+            </div>
+          </div>
+          <div className="deliverable-phone">
+            <span className="phone-speaker" />
+            <small>Today</small><strong>4 projects</strong>
+            <div className="phone-chart"><i /><i /><i /><i /></div>
+          </div>
+          <div className="deliverable-detail"><small>Design system</small><div><i /><i /><i /><i /></div><span>Aa</span></div>
+          <span className="deliverable-caption deliverable-caption--web">Responsive website</span>
+          <span className="deliverable-caption deliverable-caption--ui">Product UI</span>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function BrowserBar({ label }: { label: string }) {
+  return <div className="mock-browser-bar"><span /><span /><span /><b>{label}</b></div>;
+}
+
+function ProjectVisual({ title }: { title: string }) {
+  const key = title.toLowerCase();
+  if (key.includes("hudsons") || key.includes("coffee")) {
+    return <div className="project-visual project-visual--editorial"><div className="project-browser"><BrowserBar label={key.includes("coffee") ? "northpeak.coffee" : "hudsonscanadaspub.com"} /><div className="editorial-page"><small>{key.includes("coffee") ? "SMALL BATCH · ALBERTA" : "CANADA'S PUB"}</small><strong>{key.includes("coffee") ? "Better mornings, roasted here." : "Good times live here."}</strong><i /></div></div></div>;
+  }
+  if (key.includes("inphonite")) {
+    return <div className="project-visual project-visual--product"><div className="flow-card"><small>MESSAGE BLAST</small><strong>Reach every patient</strong><span /></div><div className="flow-card"><small>AUDIENCE</small><strong>1,248 contacts</strong><span /></div><div className="flow-connector" /></div>;
+  }
+  if (key.includes("innquest")) {
+    return <div className="project-visual project-visual--hospitality"><div className="project-browser"><BrowserBar label="innquest.com" /><div className="hospitality-page"><strong>Technology that makes<br />hospitality easier.</strong><div><i /><i /><i /></div></div></div></div>;
+  }
+  if (key.includes("serene")) {
+    return <div className="project-visual project-visual--wellness"><div className="project-browser"><BrowserBar label="serenepaths.ca" /><div className="wellness-page"><i /><small>A calmer path forward</small><strong>Support for the season you’re in.</strong></div></div></div>;
+  }
+  if (key.includes("maya")) {
+    return <div className="project-visual project-visual--realty"><div className="project-browser"><BrowserBar label="mayabennett.ca" /><div className="realty-page"><small>EDMONTON REAL ESTATE</small><strong>Find your place.</strong><span>Explore listings →</span></div></div></div>;
+  }
+  return <div className="project-visual project-visual--portfolio"><div className="portfolio-sheet"><small>SELECTED WORK / 2026</small><strong>{title}</strong><div><i /><i /><i /></div></div></div>;
+}
+
 function Hero() {
   return (
     <section className="hero">
-      <div className="container">
-        <Reveal as="p" className="eyebrow">
-          Product Design · Web Development · Digital Support
-        </Reveal>
-        <Reveal as="h1" className="hero-title">
-          Years of experience. Now fully yours.
-        </Reveal>
-        <Reveal as="p" className="hero-sub">
-          Nicole Design &amp; Co. brings together product design and full-stack development — the same expertise behind real SaaS products,
-          enterprise websites, and healthcare platforms. Now available full time.
-        </Reveal>
-        <Reveal className="hero-actions">
-          <TallyButton className="btn btn-primary">Start a Project</TallyButton>
-          <Link to="/work" className="btn btn-ghost">
-            View Our Work
-          </Link>
+      <div className="container hero-layout">
+        <div className="hero-copy">
+          <Reveal as="p" className="eyebrow">
+            Product Design · Web Development · Digital Support
+          </Reveal>
+          <Reveal as="h1" className="hero-title">
+            Years of experience. <span>Now fully yours.</span>
+          </Reveal>
+          <Reveal as="p" className="hero-sub">
+            Nicole Design &amp; Co. brings together product design and full-stack development — the same expertise behind real SaaS products,
+            enterprise websites, and healthcare platforms. Now available full time.
+          </Reveal>
+          <Reveal className="hero-actions">
+            <TallyButton className="btn btn-primary">Start a Project <span aria-hidden="true">↗</span></TallyButton>
+            <Link to="/work" className="btn btn-ghost">
+              View Our Work
+            </Link>
+          </Reveal>
+        </div>
+        <Reveal className="hero-stage" as="div">
+          <div className="stage-orbit stage-orbit--one" />
+          <div className="stage-orbit stage-orbit--two" />
+          <div className="stage-note stage-note--top">Strategy → shipped</div>
+          <div className="product-window">
+            <div className="product-window__bar"><span /><span /><span /><b>north / workspace</b></div>
+            <div className="product-window__body">
+              <aside className="product-sidebar">
+                <i className="product-logo">N</i>
+                <span className="active" /><span /><span /><span />
+              </aside>
+              <div className="product-dashboard">
+                <div className="dashboard-top"><small>Overview</small><i /></div>
+                <h2>Good morning, Maya.</h2>
+                <p>Here’s what’s moving today.</p>
+                <div className="dashboard-metrics"><span><b>18</b><small>Active tasks</small></span><span><b>84%</b><small>On track</small></span></div>
+                <div className="dashboard-chart"><i /><i /><i /><i /><i /><i /><i /></div>
+              </div>
+            </div>
+          </div>
+          <div className="stage-card stage-card--left"><span>Launch velocity</span><strong>+38%</strong><i /></div>
+          <div className="stage-card stage-card--right"><span>Built together</span><div><b>N</b><b>N</b><b>+</b></div></div>
+          <div className="stage-note stage-note--bottom">Design · Build · Grow</div>
         </Reveal>
       </div>
       <Reveal className="container hero-meta">
@@ -819,7 +916,7 @@ function ProcessPage() {
 
 function ProcessSection({ standalone = false }: { standalone?: boolean }) {
   return (
-    <section className={`process${standalone ? " page-section" : ""}`}>
+    <section className={`process${standalone ? " page-section" : " process--preview"}`}>
       <div className="container">
         {!standalone ? (
           <SectionHeading
@@ -893,12 +990,13 @@ function WorkSection({
   alternate?: boolean;
 }) {
   return (
-    <section className={`work-collection${alternate ? " work-collection--alternate" : ""}`}>
+    <section className={`work-collection work-collection--${title.toLowerCase().replaceAll(" ", "-")}${alternate ? " work-collection--alternate" : ""}`}>
       <div className="container">
         <SectionHeading eyebrow="Selected work" title={title} intro={intro} />
         <div className={`work-grid${items.length === 2 ? " work-grid--two" : ""}`}>
           {items.map((item) => (
             <Reveal as="article" className="work-card" key={item.title}>
+              <ProjectVisual title={item.title} />
               <h3 className="work-title">{item.title}</h3>
               <p className="work-type">{item.businessType}</p>
               <p className="work-desc">{item.description}</p>
@@ -924,9 +1022,10 @@ function SampleWebsitesSection({ standalone = false }: { standalone?: boolean })
             intro="These concept sites show different tones, industries, and user journeys without turning the homepage into a full portfolio."
           />
         ) : null}
-        <div className="work-grid">
+        <div className="work-grid work-grid--editorial">
           {sampleWebsites.map((website) => (
             <Reveal as="article" className="work-card" key={website.title}>
+              <ProjectVisual title={website.title} />
               <h3 className="work-title">{website.title}</h3>
               <p className="work-type">{website.businessType}</p>
               <p className="work-desc">{website.description}</p>
@@ -994,7 +1093,7 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
         <div className={`team-grid${!standalone ? " team-grid--preview" : ""}`}>
           {team.map((member) => (
             <Reveal as="article" className="team-card" key={member.name}>
-              {standalone ? <img className="team-photo" src={member.image} alt={member.imageAlt} /> : null}
+              <img className="team-photo" src={member.image} alt={member.imageAlt} loading="lazy" decoding="async" />
               <div className="team-info">
                 <h3 className="team-name">{member.name}</h3>
                 <p className="team-role">{member.role}</p>
