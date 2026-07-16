@@ -1,6 +1,6 @@
-# Nicole Design & Co. — Website
+# Fractionl Studio — Website
 
-A Vite + React + TypeScript site for Nicole Design & Co. The site uses real browser routes for each main section while preserving the original one-page marketing experience on the homepage.
+A Vite + React + TypeScript site for Fractionl Studio. The site uses real browser routes for each main section while preserving the original one-page marketing experience on the homepage.
 
 ## Tech Stack
 

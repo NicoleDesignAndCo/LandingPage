@@ -1,7 +1,7 @@
 import { ElementType, ReactNode, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, Navigate, NavLink, Route, Routes, useLocation } from "react-router-dom";
-import { founderWork, processSteps, sampleWebsites, services, site, studioWork, team } from "./data";
+import { Link, Navigate, NavLink, Route, Routes, useLocation, useParams } from "react-router-dom";
+import { caseStudies, founderWork, processSteps, sampleWebsites, site, studioWork, team, type CaseStudy } from "./data";
 import { useReveal, useScrolled } from "./hooks";
 
 declare global {
@@ -33,34 +33,38 @@ const navItems = [
 
 const pageMeta: Record<string, { title: string; description: string }> = {
   "/": {
-    title: "Nicole Design & Co. | Design & Development Partner for Growing Businesses",
+    title: "Digital Design & Development Studio | Fractionl Studio",
     description:
-      "Nicole Design & Co. helps businesses create, improve, and maintain websites, software, and digital experiences through thoughtful design, reliable development, and ongoing support.",
+      "Fractionl Studio helps startups, growing businesses, and internal teams plan, design, build, and support websites, web applications, and digital products.",
   },
   "/about": {
-    title: "About | Nicole Design & Co.",
-    description: "Nicole Design & Co. partners with businesses to bring ideas to life and support their growth online.",
+    title: "About Fractionl Studio | Design & Development Team",
+    description: "Meet the experienced designers and developers behind Fractionl Studio and learn how we support startups, growing businesses, agencies, and internal teams.",
   },
   "/services": {
-    title: "Services | Nicole Design & Co.",
+    title: "Services | Fractionl Studio",
     description: "Product design, UX/UI design, web design, and development services for growing businesses.",
   },
   "/process": {
-    title: "How We Work | Nicole Design & Co.",
+    title: "How We Work | Fractionl Studio",
     description: "A simple, considered process for discovery, design, and implementation.",
   },
   "/work": {
-    title: "Selected Work | Nicole Design & Co.",
+    title: "Selected Work | Fractionl Studio",
     description:
-      "A mix of studio projects, founder work, and demos from Nicole Design & Co.",
+      "A mix of studio projects, founder work, and demos from Fractionl Studio.",
   },
   "/team": {
-    title: "Team | Nicole Design & Co.",
-    description: "Meet Nicole Buloran and Nick Castillo, the design and development team behind Nicole Design & Co.",
+    title: "Team | Fractionl Studio",
+    description: "Meet Nicole Buloran and Nick Castillo, the design and development team behind Fractionl Studio.",
   },
   "/contact": {
-    title: "Contact | Nicole Design & Co.",
-    description: "Start an inquiry with Nicole Design & Co. through the Tally inquiry bubble or email hello@nicoledesignandco.com.",
+    title: "Contact Fractionl Studio | Start a Digital Project",
+    description: "Contact Fractionl Studio about a website, web application, product design project, temporary team support, creative retainer, or ongoing technical support.",
+  },
+  "/insights": {
+    title: "Insights | Fractionl Studio",
+    description: "Practical ideas and perspectives on design, development, digital products, websites, and better digital experiences.",
   },
 };
 
@@ -71,10 +75,13 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/services" element={<ServicesPage />} />
+        <Route path="/services/:serviceSlug" element={<SingleServicePage />} />
         <Route path="/process" element={<ProcessPage />} />
         <Route path="/work" element={<WorkPage />} />
+        <Route path="/work/:projectSlug" element={<SingleWorkPage />} />
         <Route path="/team" element={<TeamPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/insights" element={<InsightsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
@@ -239,12 +246,12 @@ function Header() {
 
 function Brand({ footer = false }: { footer?: boolean }) {
   return (
-    <Link className={`brand${footer ? " brand--footer" : ""}`} to="/" aria-label="Nicole Design and Co. home">
+    <Link className={`brand${footer ? " brand--footer" : ""}`} to="/" aria-label="Fractionl Studio home">
       <span className="brand-mark" aria-hidden="true">
         &amp;
       </span>
       <span className="brand-word">
-        Nicole Design <span className="brand-amp">&amp;</span> Co.
+        Fractionl Studio
       </span>
     </Link>
   );
@@ -335,14 +342,59 @@ function HomePage() {
   );
 }
 
+function InsightsPage() {
+  return (
+    <div className="insights-coming-soon">
+      <section className="insights-coming-soon__hero">
+        <div className="container insights-coming-soon__grid">
+          <div className="insights-coming-soon__copy">
+            <Reveal as="p" className="eyebrow">Insights</Reveal>
+            <Reveal as="h1" className="insights-coming-soon__title">
+              Insights are<br />on the <em>way.</em>
+            </Reveal>
+            <Reveal as="p" className="insights-coming-soon__intro">
+              We’re putting together practical ideas, lessons, and perspectives on design, development, digital products, websites, and the work behind building better digital experiences.
+            </Reveal>
+            <Reveal className="insights-coming-soon__actions">
+              <Link className="btn insights-coming-soon__cta" to="/contact">
+                Start a conversation <span aria-hidden="true">↗</span>
+              </Link>
+              <span>Check back soon.</span>
+            </Reveal>
+          </div>
+
+          <Reveal className="insights-signal" aria-label="A visual of ideas taking shape">
+            <div className="insights-signal__meta">
+              <span>Field notes</span>
+              <span>Issue 001</span>
+            </div>
+            <div className="insights-signal__field" aria-hidden="true">
+              {Array.from({ length: 9 }, (_, index) => <i key={index} />)}
+              <div className="insights-signal__orb" />
+              <div className="insights-signal__card">
+                <span>Ideas in progress</span>
+                <b>Design<br />Build<br />Learn</b>
+              </div>
+            </div>
+            <div className="insights-signal__footer">
+              <span>Fractionl Studio</span>
+              <span>Coming soon</span>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function DeliverablesShowcase() {
   return (
     <section className="deliverables-showcase" aria-label="Examples of studio deliverables">
       <div className="container deliverables-layout">
         <Reveal className="deliverables-copy">
-          <p className="eyebrow">From idea to interface</p>
-          <h2 className="section-title">The things your customers actually see and use.</h2>
-          <p className="section-intro">Websites, product flows, and launch-ready digital assets — designed as one connected experience.</p>
+          <p className="eyebrow">Built around real work</p>
+          <h2 className="section-title">The digital experiences your customers and team actually use.</h2>
+          <p className="section-intro">From the website that introduces your business to the systems that keep work moving behind the scenes, we focus on the parts of your digital experience that need to be clear, useful, and reliable.</p>
         </Reveal>
         <Reveal className="deliverables-canvas">
           <div className="deliverable-browser">
@@ -371,16 +423,31 @@ function BrowserBar({ label }: { label: string }) {
   return <div className="mock-browser-bar"><span /><span /><span /><b>{label}</b></div>;
 }
 
-function ProjectVisual({ title }: { title: string }) {
+function ProjectVisual({ title, alt }: { title: string; alt?: string }) {
   const key = title.toLowerCase();
+  if (key.includes("trifold brochure")) {
+    return <div className="project-visual project-visual--trifold-brochure"><img src="/images/work/trifold-brochure/hero.webp" alt={alt ?? ""} loading="lazy" decoding="async" /></div>;
+  }
+  if (key.includes("navigation restructure")) {
+    return <div className="project-visual project-visual--navigation-restructure"><img src="/images/work/navigation-restructure/hero.webp" alt={alt ?? ""} loading="lazy" decoding="async" /></div>;
+  }
+  if (key.includes("pensioner profile")) {
+    return <div className="project-visual project-visual--pensioner-profile"><img src="/images/work/pensioner-profile/hero.webp" alt={alt ?? ""} loading="lazy" decoding="async" /></div>;
+  }
+  if (key.includes("message blast")) {
+    return <div className="project-visual project-visual--message-blast"><img src="/images/work/message-blast/hero.webp" alt={alt ?? ""} loading="lazy" decoding="async" /></div>;
+  }
   if (key.includes("hudsons") || key.includes("coffee")) {
-    return <div className="project-visual project-visual--editorial"><div className="project-browser"><BrowserBar label={key.includes("coffee") ? "northpeak.coffee" : "hudsonscanadaspub.com"} /><div className="editorial-page"><small>{key.includes("coffee") ? "SMALL BATCH · ALBERTA" : "CANADA'S PUB"}</small><strong>{key.includes("coffee") ? "Better mornings, roasted here." : "Good times live here."}</strong><i /></div></div></div>;
+    if (key.includes("hudsons")) {
+      return <div className="project-visual project-visual--hudsons"><img src="/images/work/hudsons-canadas-pub/hero.avif" alt={alt ?? ""} loading="lazy" decoding="async" /></div>;
+    }
+    return <div className="project-visual project-visual--editorial" role={alt ? "img" : undefined} aria-label={alt}><div className="project-browser"><BrowserBar label={key.includes("coffee") ? "northpeak.coffee" : "hudsonscanadaspub.com"} /><div className="editorial-page"><small>{key.includes("coffee") ? "SMALL BATCH · ALBERTA" : "CANADA'S PUB"}</small><strong>{key.includes("coffee") ? "Better mornings, roasted here." : "Good times live here."}</strong><i /></div></div></div>;
   }
   if (key.includes("inphonite")) {
-    return <div className="project-visual project-visual--product"><div className="flow-card"><small>MESSAGE BLAST</small><strong>Reach every patient</strong><span /></div><div className="flow-card"><small>AUDIENCE</small><strong>1,248 contacts</strong><span /></div><div className="flow-connector" /></div>;
+    return <div className="project-visual project-visual--product" role={alt ? "img" : undefined} aria-label={alt}><div className="flow-card"><small>MESSAGE BLAST</small><strong>Reach every patient</strong><span /></div><div className="flow-card"><small>AUDIENCE</small><strong>1,248 contacts</strong><span /></div><div className="flow-connector" /></div>;
   }
   if (key.includes("innquest")) {
-    return <div className="project-visual project-visual--hospitality"><div className="project-browser"><BrowserBar label="innquest.com" /><div className="hospitality-page"><strong>Technology that makes<br />hospitality easier.</strong><div><i /><i /><i /></div></div></div></div>;
+    return <div className="project-visual project-visual--innquest"><img src="/images/work/innquest-canada/hero.webp" alt={alt ?? ""} loading="lazy" decoding="async" /></div>;
   }
   if (key.includes("serene")) {
     return <div className="project-visual project-visual--wellness"><div className="project-browser"><BrowserBar label="serenepaths.ca" /><div className="wellness-page"><i /><small>A calmer path forward</small><strong>Support for the season you’re in.</strong></div></div></div>;
@@ -397,19 +464,19 @@ function Hero() {
       <div className="container hero-layout">
         <div className="hero-copy">
           <Reveal as="p" className="eyebrow">
-            Product Design · Web Development · Digital Support
+            Digital Design &amp; Development Studio
           </Reveal>
           <Reveal as="h1" className="hero-title">
-            Years of experience. <span>Now fully yours.</span>
+            Experienced design and development, <span>ready when you need it.</span>
           </Reveal>
           <Reveal as="p" className="hero-sub">
-            Nicole Design &amp; Co. brings together product design and full-stack development — the same expertise behind real SaaS products,
-            enterprise websites, and healthcare platforms. Now available full time.
+            Fractionl Studio helps founders, growing businesses, and internal teams plan, design, build, and support websites, web applications, and digital products.
+            <br /><br />Bring us in for a project, a temporary capacity gap, or ongoing digital support.
           </Reveal>
           <Reveal className="hero-actions">
             <TallyButton className="btn btn-primary">Start a Project <span aria-hidden="true">↗</span></TallyButton>
-            <Link to="/work" className="btn btn-ghost">
-              View Our Work
+            <Link to="/services" className="btn btn-ghost">
+              Explore Our Services
             </Link>
           </Reveal>
         </div>
@@ -453,11 +520,74 @@ function Hero() {
 
 function AboutPage() {
   return (
-    <PageShell eyebrow="About the studio" title="Your Design & Development Partner">
-      <AboutSection standalone />
+    <div className="about-page">
+      <section className="about-page__hero">
+        <div className="container about-page__hero-grid">
+          <Reveal className="about-page__hero-copy">
+            <p className="eyebrow">About Fractionl Studio</p>
+            <h1>Built to work <span>alongside you.</span></h1>
+          </Reveal>
+          <Reveal className="about-page__hero-note">
+            <p>A small, experienced design and development studio for businesses and teams that need more digital capacity—without building it all in-house.</p>
+            <a href="#about-fractionl" className="about-page__jump">Get to know the studio <span aria-hidden="true">↓</span></a>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="about-studio" id="about-fractionl">
+        <div className="container">
+          <Reveal as="p" className="eyebrow">About Fractionl Studio</Reveal>
+          <div className="about-studio__grid">
+            <Reveal className="about-studio__statement">
+              <h2>Experienced digital support, without building the whole team in-house.</h2>
+            </Reveal>
+            <Reveal className="about-studio__body">
+              <p>Fractionl Studio brings design, development, and digital strategy together to help businesses build, improve, and support the technology behind their work.</p>
+              <p>We work with founders bringing new ideas to market, businesses replacing outdated websites or manual systems, and teams that need experienced capacity without another permanent hire.</p>
+              <p>From websites and digital products to ongoing design, development, and technical support, we step in where the need is—for a project, a temporary gap, or ongoing support.</p>
+            </Reveal>
+          </div>
+          <Reveal className="about-studio__visual" aria-label="Fractionl Studio works alongside client teams from need through delivery">
+            <div className="about-studio__visual-top"><span>Your team</span><span>Working together</span><span>Fractionl Studio</span></div>
+            <div className="about-studio__visual-flow" aria-hidden="true">
+              <div><b>01</b><span>A need appears</span></div><i />
+              <div><b>02</b><span>We plug in</span></div><i />
+              <div><b>03</b><span>The work moves</span></div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="about-support">
+        <div className="container about-support__grid">
+          <Reveal className="about-support__intro">
+            <p className="eyebrow">Why Fractionl exists</p>
+            <h2>You do not always need another full-time hire.</h2>
+            <p>Sometimes the right experience is needed for a specific moment. Fractionl Studio is designed to work alongside businesses and teams in those moments—without adding unnecessary overhead or slowing the work down.</p>
+          </Reveal>
+          <div className="about-support__list">
+            {["A team to plan and build something new", "Experienced support for a specific project", "Coverage during a leave, launch, or capacity gap", "Ongoing design, development, or creative support"].map((item, index) => (
+              <Reveal className="about-support__item" key={item}><span>0{index + 1}</span><p>{item}</p></Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <TeamSection standalone />
-      <ProcessSection />
-    </PageShell>
+
+      <section className="about-page__cta">
+        <div className="container about-page__cta-inner">
+          <Reveal>
+            <p className="eyebrow">Work with Fractionl</p>
+            <h2>Bring experienced support to the table.</h2>
+          </Reveal>
+          <Reveal className="about-page__cta-action">
+            <p>Tell us what you are building, where your team needs capacity, or what needs to keep moving.</p>
+            <TallyButton className="btn btn-primary btn-lg">Start a Project <span aria-hidden="true">↗</span></TallyButton>
+          </Reveal>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -466,13 +596,13 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
     <section className={`about${standalone ? " page-section" : ""}`}>
       <div className="container about-grid">
         <Reveal as="p" className="eyebrow">
-          About the studio
+          A small, experienced studio
         </Reveal>
         <Reveal className="about-body">
-          <h2 className="about-lead">{standalone ? "Your Design & Development Partner" : "Small studio. Thoughtful work."}</h2>
+          <h2 className="about-lead">{standalone ? "Your Design & Development Partner" : "Senior thinking. Practical execution."}</h2>
           {standalone ? (
             <>
-              <p className="about-text">Nicole Design &amp; Co. partners with businesses to bring ideas to life and support their growth online.</p>
+              <p className="about-text">Fractionl Studio partners with businesses to bring ideas to life and support their growth online.</p>
               <p className="about-text">
                 From websites and software to marketing materials and ongoing improvements, we combine design thinking with technical expertise to
                 create solutions that are both effective and easy to maintain.
@@ -482,11 +612,10 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
           ) : (
             <>
               <p className="about-text">
-                We&apos;ve spent years doing this work at a high level across SaaS, hospitality, healthcare, and more. Now we&apos;re doing it for you
-                full time.
+                We bring product design, web design, software development, and ongoing support together—so you can move from an idea to a finished digital experience without coordinating a different provider for every step.
               </p>
               <Link className="text-link" to="/about">
-                Learn about the studio
+                Learn About Fractionl
               </Link>
             </>
           )}
@@ -498,30 +627,91 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
 
 function ServicesPage() {
   return (
-    <>
-      <section className="page-hero">
-        <div className="container">
-          <Reveal as="p" className="eyebrow">
-            What we do
+    <div className="services-overview">
+      <section className="services-overview__hero">
+        <div className="container services-overview__hero-grid">
+          <Reveal className="services-overview__hero-copy">
+            <p className="eyebrow">Strategy · Design · Development · Support</p>
+            <h1>From first decision to <span>long-term momentum.</span></h1>
           </Reveal>
-          <Reveal as="h1" className="page-title page-title--services">
-            Your own digital growth support team.
+          <Reveal className="services-overview__hero-aside">
+            <p>Fractionl Studio helps ambitious businesses and product teams plan, design, build, and care for the digital work that moves them forward.</p>
+            <a className="services-overview__jump" href="#service-overview">Explore our services <span aria-hidden="true">↓</span></a>
           </Reveal>
-          <Reveal as="p" className="page-hero-sub">
-            From websites and digital marketing support to product design and development, we help small businesses and product teams build,
-            maintain, and improve their digital presence.
+          <Reveal className="services-overview__hero-map" aria-hidden="true">
+            <span>Clarify</span><i /><span>Design</span><i /><span>Build</span><i /><span>Grow</span>
           </Reveal>
         </div>
       </section>
-      <ServicesIntroSection />
-      <DigitalSupportPackagesSection />
-      <ProductSupportSection />
-      <PackageGuidanceSection />
-      <CustomEngagementsSection />
-      <CapabilitiesSection />
+
+      <section className="services-overview__intro">
+        <div className="container services-overview__intro-grid">
+          <Reveal as="p" className="eyebrow">One studio, the full picture</Reveal>
+          <Reveal as="p">Bring us in at the beginning, in the middle of a build, or when the work needs consistent attention. We connect business strategy to clear design, capable technology, and support that lasts beyond launch.</Reveal>
+        </div>
+      </section>
+
+      <section className="services-overview__list" id="service-overview" aria-label="Services">
+        {overviewServices.map((service) => (
+          <article className={`overview-service overview-service--${service.visual}`} key={service.slug}>
+            <div className="container overview-service__grid">
+              <Reveal className="overview-service__copy">
+                <span className="overview-service__number">{service.index}</span>
+                <h2>{service.title}</h2>
+                <p className="overview-service__description">{service.description}</p>
+                <p className="overview-service__best"><strong>Best for</strong>{service.bestFor}</p>
+                <Link className="overview-service__link" to={`/services/${service.slug}`}>Learn more <span aria-hidden="true">↗</span></Link>
+              </Reveal>
+              <Reveal className="overview-service__visual">
+                <ServiceVisual type={service.visual} />
+              </Reveal>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="engagements">
+        <div className="container">
+          <Reveal className="engagements__heading">
+            <p className="eyebrow">Ways to work with us</p>
+            <h2>The right shape of support for where you are now.</h2>
+          </Reveal>
+          <div className="engagements__track">
+            {engagementModels.map((model, index) => (
+              <Reveal as="article" className="engagements__item" key={model.title}>
+                <span>0{index + 1}</span><h3>{model.title}</h3><p>{model.description}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
       <ServicesFinalCta />
-    </>
+    </div>
   );
+}
+
+const overviewServices = [
+  { index: "01", slug: "technology-consulting", title: "Technology Consulting", visual: "strategy", description: "We help you decide what to build, what to buy, and what to skip before you spend money on development — so the technical decisions match the business problem you’re actually trying to solve.", bestFor: "Product strategy, MVP planning, system architecture, vendor & platform selection", detail: "Make confident technology decisions before they become expensive commitments.", includes: ["Product strategy", "MVP planning", "System architecture", "Vendor and platform selection"] },
+  { index: "02", slug: "website-design-development", title: "Website Design & Development", visual: "website", description: "We design and build custom websites built to convert — fast load times, clear paths to contact or purchase, and a structure you can update yourself without calling us for every change.", bestFor: "New businesses, redesigns, service businesses, professional firms, local businesses", detail: "A clear, fast, conversion-focused website designed around your business.", includes: ["Website strategy", "UX and visual design", "Responsive development", "Flexible content management"] },
+  { index: "03", slug: "web-applications", title: "Web Applications", visual: "application", description: "We design and build custom web applications that replace manual work with systems — dashboards, customer portals, booking flows, billing, and internal tools that cut down the hours your team spends on repetitive tasks.", bestFor: "Founders building a SaaS product, businesses with software that has outgrown its current support or development team", detail: "Purpose-built products and tools that turn repetitive work into reliable systems.", includes: ["SaaS products", "Dashboards and portals", "Booking and billing flows", "Internal tools"] },
+  { index: "04", slug: "fractional-product-design", title: "Fractional Product Designer", visual: "product", description: "Senior product design capacity for a project, a quarter, or a leave coverage gap — without the recruiting timeline or full-time overhead of hiring.", bestFor: "Startups, SaaS companies, agencies needing overflow, teams needing temporary or leave coverage", detail: "Experienced product design capacity that fits directly into your existing team.", includes: ["UX and UI design", "User flows and prototypes", "Design systems", "Developer collaboration"] },
+  { index: "05", slug: "creative-retainer", title: "Creative Retainer", visual: "creative", description: "A reserved block of design support each month, handled by a team that already knows your brand — so campaigns, landing pages, and sales collateral get done without briefing a new freelancer every time.", bestFor: "Businesses that need consistent creative output without an in-house hire", detail: "Reliable creative momentum from a team that already understands the brand.", includes: ["Campaign creative", "Landing pages", "Sales collateral", "Presentations and social assets"] },
+  { index: "06", slug: "managed-hosting-support", title: "Managed Hosting & Ongoing Support", visual: "support", description: "We keep what we build — or what you already have — online, secure, and fast: backups, monitoring, updates, and a team that responds when something breaks.", bestFor: "Any business that doesn’t want website maintenance to become someone’s job", detail: "Quiet, dependable technical care that keeps your digital presence healthy.", includes: ["Managed hosting", "Backups and monitoring", "Security and updates", "Responsive technical support"] },
+] as const;
+
+const engagementModels = [
+  { title: "One-off project", description: "A focused engagement with a clear outcome, from strategy and design through launch." },
+  { title: "Temporary or fractional support", description: "Senior capacity embedded with your team for a project, a quarter, or a coverage gap." },
+  { title: "Ongoing support", description: "A familiar studio on hand each month to keep creative and technical work moving." },
+] as const;
+
+function ServiceVisual({ type }: { type: typeof overviewServices[number]["visual"] }) {
+  if (type === "strategy") return <div className="visual-strategy" aria-label="Technology roadmap placeholder"><div className="visual-label">Decision map</div><div className="strategy-node strategy-node--start">Business goal</div><i /><div className="strategy-options"><span>Build</span><span>Buy</span><span>Skip</span></div><div className="strategy-note">Recommended path → MVP</div></div>;
+  if (type === "website") return <div className="visual-website" aria-label="Responsive website shown on desktop and mobile"><div className="mock-browser"><div className="mock-bar"><i/><i/><i/></div><div className="mock-site"><small>Fractionl project</small><strong>Ideas made<br/>useful.</strong><button>Start here</button></div></div><div className="mock-mobile"><div className="mock-mobile__nav"><small>Fractionl project</small><i/><i/></div><div className="mock-mobile__content"><strong>Ideas made<br/>useful.</strong><p>Clear thinking for ambitious digital work.</p><span>Start here <i>↗</i></span></div><div className="mock-mobile__accent" aria-hidden="true"/></div></div>;
+  if (type === "application") return <div className="visual-app" aria-label="Dashboard UI placeholder"><div className="app-sidebar"><b>F</b><i/><i/><i/></div><div className="app-main"><small>Workspace overview</small><div className="app-greeting">Good morning, Alex.</div><div className="app-stats"><span><b>84%</b>Efficiency</span><span><b>128</b>Automations</span></div><div className="app-chart">{[42,66,54,88,72,96,80].map((height) => <i style={{height:`${height}%`}} key={height}/>)}</div></div><div className="app-toast">✓ Workflow completed</div></div>;
+  if (type === "product") return <div className="visual-product" aria-label="Product design workflow placeholder"><div className="flow-card"><small>Checkout flow</small><div><i/><i/><i/></div></div><div className="design-screen"><span className="design-toolbar">Design system · v2.4</span><div className="design-ui"><i/><i/><i/></div></div><div className="comment-pin">N</div><div className="comment-bubble">Ready for dev handoff</div></div>;
+  if (type === "creative") return <div className="visual-creative" aria-label="Creative deliverables collage placeholder"><div className="creative-poster"><small>Campaign 04</small><strong>Make it<br/><em>matter.</em></strong></div><div className="creative-social"><span>New release</span><b>F/</b></div><div className="creative-slide"><small>Sales deck</small><strong>One clear story.</strong><i/></div><div className="creative-strip">Landing pages · Social · Presentations · Campaigns</div></div>;
+  return <div className="visual-support" aria-label="Monitoring and support interface placeholder"><div className="support-head"><span><i/>All systems operational</span><small>Live monitoring</small></div><div className="uptime"><small>Uptime · last 30 days</small><strong>99.99%</strong><div>{Array.from({length:24},(_,i)=><i key={i}/>)}</div></div><div className="support-metrics"><span><small>Last backup</small><b>12 min ago</b></span><span><small>Security</small><b>Protected</b></span><span><small>Response</small><b>218 ms</b></span></div></div>;
 }
 
 const digitalSupportPackages = [
@@ -617,45 +807,43 @@ const customEngagements = [
 
 const contactInquiryOptions = [
   {
-    title: "Website Support",
-    description: "For businesses that need help keeping their website secure, updated, and running smoothly.",
+    title: "Website Design & Development",
+    description: "For a new business website, landing page, redesign, WordPress build, or an existing website that needs to work better.",
   },
   {
-    title: "Digital Growth Support",
-    description: "For businesses that need ongoing website updates, marketing materials, landing pages, or social media assets.",
+    title: "Web Application or MVP",
+    description: "For SaaS products, customer portals, dashboards, booking systems, internal tools, and technology-enabled business ideas.",
   },
   {
-    title: "Product Design Support",
-    description: "For SaaS teams, startups, or founders who need UX/UI design, product flows, prototypes, or design systems.",
+    title: "Product Design & Team Support",
+    description: "For UX/UI design, user flows, prototypes, design systems, project overflow, leave coverage, or temporary product design capacity.",
   },
   {
-    title: "Custom Projects",
-    description:
-      "For website redesigns, frontend development, landing pages, marketing assets, or projects that do not fit neatly into a package.",
+    title: "Ongoing Creative or Technical Support",
+    description: "For recurring creative work, managed hosting, website maintenance, updates, development support, and ongoing digital improvements.",
   },
 ] as const;
 
 const contactChecklist = [
-  "Your business name",
-  "What you need help with",
-  "Your website or product link, if available",
-  "Any timeline you have in mind",
-  "Your budget range, if you already know it",
+  "Your business, product, or organization",
+  "What you are hoping to build, improve, or replace",
+  "Who will use it",
+  "Any timeline, budget range, or launch date already in mind",
   "The best way to reach you",
 ] as const;
 
 const contactNextSteps = [
   {
     title: "Send an Inquiry",
-    description: "Use the Tally bubble to tell us what you need help with.",
+    description: "Tell us what you need help with and share any context you already have.",
   },
   {
-    title: "We'll Review Your Request",
-    description: "We'll look at your business, website, or product and determine the best starting point.",
+    title: "We Review the Request",
+    description: "We look at the business need, scope, timing, and the type of support that may be the best fit.",
   },
   {
-    title: "We'll Follow Up",
-    description: "If it feels like a good fit, we'll reach out with next steps, questions, or a recommended package.",
+    title: "We Follow Up",
+    description: "If the project looks like a good fit, we will reach out with next steps, questions, or a recommended approach.",
   },
 ] as const;
 
@@ -689,7 +877,7 @@ function ServicesIntroSection() {
   //       <Reveal className="about-body">
   //         <h2 className="about-lead">A digital growth and support team for the work that keeps moving.</h2>
   //         <p className="about-text">
-  //           Nicole Design &amp; Co. helps businesses and product teams maintain a stronger digital presence, improve existing experiences, and
+  //           Fractionl Studio helps businesses and product teams maintain a stronger digital presence, improve existing experiences, and
   //           move important design and development work forward without adding another full-time hire.
   //         </p>
   //       </Reveal>
@@ -868,6 +1056,33 @@ function ServicesFinalCta() {
   );
 }
 
+const homepageServices = [
+  {
+    index: "01",
+    title: "Technology Consulting",
+    description: "Product strategy, MVP planning, system architecture, and guidance on what to build, buy, improve, or skip.",
+    to: "/services/technology-consulting",
+  },
+  {
+    index: "02",
+    title: "Website & Web Application Design + Development",
+    description: "Custom websites, SaaS products, dashboards, portals, and digital tools designed and built around real business needs.",
+    to: "/services",
+  },
+  {
+    index: "03",
+    title: "Fractional Product & Creative Support",
+    description: "Experienced product design and ongoing creative support for projects, launches, overflow, leave coverage, and recurring design needs.",
+    to: "/services",
+  },
+  {
+    index: "04",
+    title: "Managed Hosting & Ongoing Support",
+    description: "Hosting, monitoring, updates, maintenance, and responsive technical support that keeps your digital work running smoothly.",
+    to: "/services/managed-hosting-support",
+  },
+] as const;
+
 function ServicesSection({ standalone = false }: { standalone?: boolean }) {
   return (
     <section className={`services${standalone ? " page-section" : ""}`}>
@@ -875,20 +1090,20 @@ function ServicesSection({ standalone = false }: { standalone?: boolean }) {
         {!standalone ? (
           <SectionHeading
             eyebrow="What we do"
-            title={<>Support packages built around<br />how your business grows.</>}
-            intro="From reliable website maintenance to ongoing product and marketing support, choose the level of help that fits where your business is today."
+            title={<>Strategy, design, development,<br />and support in one studio.</>}
+            intro="Bring us in for a single project, a temporary capacity gap, or ongoing help. We shape the engagement around the problem—not the other way around."
             twoLine
           />
         ) : null}
         <div className={`services-grid${!standalone ? " services-grid--preview" : ""}`}>
-          {services.map((service) => (
+          {homepageServices.map((service) => (
             <Reveal as="article" className="service-card" key={service.title}>
               <span className="service-index">{service.index}</span>
               <h3 className="service-title">{service.title}</h3>
               <p className="service-desc">{service.description}</p>
               {!standalone ? (
-                <Link className="card-link" to="/services">
-                  View services
+                <Link className="card-link" to={service.to}>
+                  Learn more
                 </Link>
               ) : null}
             </Reveal>
@@ -906,6 +1121,55 @@ function ServicesSection({ standalone = false }: { standalone?: boolean }) {
   );
 }
 
+function SingleServicePage() {
+  const { serviceSlug } = useParams();
+  const service = overviewServices.find((item) => item.slug === serviceSlug);
+
+  if (!service) return <Navigate to="/services" replace />;
+  const content = servicePageContent[service.slug];
+  const related = content.related.map((slug: string) => overviewServices.find((item) => item.slug === slug)).filter(Boolean) as (typeof overviewServices[number])[];
+
+  return (
+    <div className={`single-service single-service--${service.visual}`}>
+      <section className="single-service__hero"><div className="container single-service__hero-grid">
+        <Reveal className="single-service__hero-copy"><p className="eyebrow">Service · {service.index}</p><h1>{service.title}</h1><p className="single-service__statement">{service.detail}</p><p className="single-service__description">{service.description}</p><div className="hero-actions"><TallyButton className="btn btn-primary">Start a conversation <span aria-hidden="true">↗</span></TallyButton></div></Reveal>
+        <Reveal className="single-service__hero-visual"><ServiceVisual type={service.visual} /></Reveal>
+      </div></section>
+      <section className="single-service__problem"><div className="container single-service__problem-grid">
+        <Reveal className="single-service__section-intro"><p className="eyebrow">The problem</p><h2>{content.problemTitle}</h2></Reveal>
+        <div className="single-service__pain-list">{content.problems.map((problem: string, index: number) => <Reveal as="div" className="single-service__pain" key={problem}><span>0{index + 1}</span><p>{problem}</p></Reveal>)}</div>
+      </div></section>
+      <section className="single-service__capabilities"><div className="container">
+        <Reveal className="single-service__cap-head"><p className="eyebrow">What we help with</p><h2>Focused expertise, connected from start to finish.</h2></Reveal>
+        <div className="single-service__cap-list">{content.capabilities.map((capability: { title: string; description: string }, index: number) => <Reveal as="article" className="single-service__cap" key={capability.title}><span>0{index + 1}</span><h3>{capability.title}</h3><p>{capability.description}</p></Reveal>)}</div>
+      </div></section>
+      <section className="single-service__feature" aria-label={`${service.title} visual example`}><div className="container">
+        <Reveal className="single-service__feature-head"><p className="eyebrow">In practice</p><p>{content.visualCaption}</p></Reveal><Reveal className="single-service__feature-canvas"><ServiceVisual type={service.visual} /></Reveal>
+      </div></section>
+      <section className="single-service__fit"><div className="container single-service__fit-grid"><Reveal><p className="eyebrow">Best for</p><h2>{content.bestForTitle}</h2></Reveal><Reveal as="ul">{content.bestFor.map((item: string) => <li key={item}>{item}</li>)}</Reveal></div></section>
+      <section className="single-service__process"><div className="container"><Reveal className="single-service__process-head"><p className="eyebrow">How we work</p><h2>A clear path, with no black box.</h2></Reveal><ol className="single-service__process-list">{content.process.map((step: { title: string; description: string }, index: number) => <Reveal as="li" key={step.title}><span>0{index + 1}</span><div><h3>{step.title}</h3><p>{step.description}</p></div></Reveal>)}</ol></div></section>
+      <section className="single-service__proof"><div className="container single-service__proof-grid"><Reveal className="single-service__proof-main"><span className="single-service__placeholder">{content.proofLabels[0]}</span><ServiceVisual type={service.visual} /></Reveal><Reveal className="single-service__proof-side"><span className="single-service__placeholder">{content.proofLabels[1]}</span><div className="single-service__proof-lines"><i/><i/><i/><b>Visual proof<br/>coming soon.</b></div></Reveal></div></section>
+      <section className="single-service__related"><div className="container"><Reveal className="single-service__related-head"><p className="eyebrow">Related services</p><h2>Support around the edges, too.</h2></Reveal><div className="single-service__related-list">{related.map((item) => <Reveal as="article" key={item.slug}><span>{item.index}</span><h3>{item.title}</h3><Link to={`/services/${item.slug}`}>Explore <span aria-hidden="true">↗</span></Link></Reveal>)}</div></div></section>
+      <section className="single-service__cta"><div className="container"><Reveal><p className="eyebrow">Start a conversation</p><h2>{content.cta}</h2><p>Tell us where you are, what is getting in the way, and what a better outcome would look like.</p><TallyButton className="btn single-service__cta-button">Discuss your project <span aria-hidden="true">↗</span></TallyButton></Reveal></div></section>
+    </div>
+  );
+}
+
+const serviceSpecificContent = {
+  "technology-consulting": ["The costly part is rarely the code. It is choosing the wrong path before it.", ["The idea is clear, but the technical route is not.", "Platforms, vendors, and build options all sound equally plausible.", "A team needs an actionable plan before committing budget."], "For teams making a consequential technology decision.", ["Founders shaping an MVP", "Teams modernizing a system", "Businesses comparing build and buy options"], "Roadmaps and decision systems turn ambiguity into a sequence your team can act on.", ["Architecture direction", "Roadmap excerpt"], "Make the next technology decision with clarity."],
+  "website-design-development": ["Your website should make the business easier to understand — and easier to choose.", ["The current site no longer reflects the quality of the business.", "Visitors cannot quickly find a reason or a path to act.", "Small updates depend on technical help every time."], "For businesses ready for a website that earns its place.", ["New and growing businesses", "Established brands ready for a redesign", "Service firms with a complex offer"], "Responsive screens, purposeful content, and conversion paths designed as one connected experience.", ["Desktop experience", "Responsive system"], "Build a website that feels as capable as your business."],
+  "web-applications": ["When manual work becomes the system, growth starts creating more friction.", ["Important workflows live across spreadsheets and inboxes.", "Customers expect a clearer, self-serve experience.", "Existing software no longer fits how the team works."], "For teams turning repeated work into a dependable product.", ["SaaS founders", "Operations-heavy businesses", "Teams extending an existing application"], "Interfaces, workflows, and system states made tangible before and during the build.", ["Product interface", "Workflow detail"], "Turn the workflow into a product people want to use."],
+  "fractional-product-design": ["The product needs senior design attention, but not another permanent seat.", ["A roadmap is moving faster than current design capacity.", "A critical project needs experienced product judgment.", "Developers need clearer flows, states, and handoff."], "For product teams that need senior momentum now.", ["SaaS and startup teams", "Leave or project coverage", "Agencies needing product design depth"], "Flows, interface systems, and collaborative handoff that fit into the way your team already ships.", ["Feature flow", "Design system"], "Add experienced product design without slowing down to hire."],
+  "creative-retainer": ["Consistent creative work is hard when every request starts from zero.", ["Campaign needs arrive faster than internal capacity.", "Too many one-off partners create an inconsistent brand.", "Small but important deliverables keep getting deferred."], "For brands that need a reliable creative rhythm.", ["Lean marketing teams", "Growing brands with recurring needs", "Businesses without an in-house designer"], "A flexible mix of campaign, sales, social, and web assets — all speaking the same visual language.", ["Campaign system", "Deliverable detail"], "Give your creative work a consistent place to move."],
+  "managed-hosting-support": ["A website should support the business, not quietly become another job.", ["Updates, backups, and security have no clear owner.", "Small issues linger until they become urgent.", "The team needs a real person to call when something breaks."], "For businesses that value quiet reliability.", ["Business-critical websites", "Teams without technical staff", "Sites that need ongoing improvement"], "Monitoring, maintenance, and responsive support working quietly in the background.", ["Service health", "Maintenance log"], "Keep your website healthy without keeping it on your mind."],
+} as const;
+
+const servicePageContent = Object.fromEntries(overviewServices.map((service) => {
+  const [problemTitle, problems, bestForTitle, bestFor, visualCaption, proofLabels, cta] = serviceSpecificContent[service.slug];
+  const descriptions = ["Define the right direction and remove uncertainty before execution.", "Shape a clear, usable experience around real business and user needs.", "Turn the plan into practical work that is ready to use and maintain.", "Keep decisions, details, and delivery connected as the work moves forward."];
+  return [service.slug, { problemTitle, problems, bestForTitle, bestFor, visualCaption, proofLabels, cta, capabilities: service.includes.map((title, index) => ({ title, description: descriptions[index] })), process: [{ title: "Understand", description: "We align on the context, constraints, people, and outcome that matter." }, { title: "Plan", description: "We turn what we learn into priorities, scope, and a visible path forward." }, { title: service.visual === "strategy" ? "Recommend" : service.visual === "support" ? "Care" : "Design & build", description: "We make the work tangible, share progress, and refine it with you." }, { title: service.visual === "support" ? "Improve" : "Launch & support", description: "We help the work land well and stay useful after delivery." }], related: overviewServices.filter((item) => item.slug !== service.slug).slice(0, 3).map((item) => item.slug) }];
+})) as Record<typeof overviewServices[number]["slug"], any>;
+
 function ProcessPage() {
   return (
     <PageShell eyebrow="How we work" title="A simple, considered process">
@@ -921,8 +1185,8 @@ function ProcessSection({ standalone = false }: { standalone?: boolean }) {
         {!standalone ? (
           <SectionHeading
             eyebrow="How we work"
-            title={<>A simple,<br />considered process</>}
-            intro="We keep projects focused through three practical stages: understand the problem, shape the experience, then bring it to life."
+            title={<>A clear process,<br />without unnecessary layers.</>}
+            intro="We start by understanding what needs to change, then shape the right approach around your goals, users, budget, and timeline."
             twoLine
           />
         ) : null}
@@ -951,22 +1215,68 @@ function ProcessSection({ standalone = false }: { standalone?: boolean }) {
 
 function WorkPage() {
   return (
-    <PageShell
-      eyebrow="Selected work"
-      title="Selected Work"
-      intro="A mix of studio projects, founder work, and demos showing what we build."
-    >
-      <WorkSection title="Studio Work" items={studioWork} linkLabel="View Project" />
-      <WorkSection title="Founder Work" items={founderWork} linkLabel="View Portfolio" alternate />
-      <WorkSection
-        title="Sample Sites"
-        intro="Demos showing what we can build across different industries."
-        items={sampleWebsites}
-        linkLabel="View Demo"
-      />
-      <WorkFinalCta />
-    </PageShell>
+    <div className="work-page">
+      <PageShell
+        eyebrow="Selected work"
+        title="Selected Work"
+        intro="A mix of studio projects, founder work, and demos showing what we build."
+      >
+        <WorkSection title="Studio Work" items={studioWork} linkLabel="View Project" />
+        <WorkSection title="Founder Work" items={founderWork} linkLabel="View Portfolio" alternate />
+        <WorkSection
+          title="Demo Sites"
+          intro="Demos showing what we can build across different industries."
+          items={sampleWebsites}
+          linkLabel="View Demo"
+        />
+        <WorkFinalCta />
+      </PageShell>
+    </div>
   );
+}
+
+function SingleWorkPage() {
+  const { projectSlug } = useParams();
+  const project = caseStudies.find((item) => item.slug === projectSlug);
+  if (!project) return <Navigate to="/work" replace />;
+
+  const related = project.related.map((slug) => caseStudies.find((item) => item.slug === slug)).filter((item): item is CaseStudy => Boolean(item));
+  return (
+    <article className={`case-study case-study--${project.slug}`}>
+      <Helmet><title>{project.seoTitle}</title><meta name="description" content={project.metaDescription} /><link rel="canonical" href={`${site.domain}/work/${project.slug}`} /></Helmet>
+      <header className="case-hero container">
+        <Reveal as="p" className="eyebrow">{project.eyebrow}</Reveal>
+        <Reveal as="h1" className="case-hero__title">{project.title}</Reveal>
+        <Reveal as="p" className="case-hero__intro">{project.introduction}</Reveal>
+        <Reveal as="p" className="case-hero__summary">{project.summary}</Reveal>
+        <Reveal as="dl" className="case-details">
+          {project.details.map((detail) => <div key={detail.label}><dt>{detail.label}</dt><dd>{detail.url ? <a href={detail.url} target="_blank" rel="noreferrer">{detail.value} ↗</a> : detail.value}</dd></div>)}
+        </Reveal>
+      </header>
+      <CaseVisual project={project} label="Project introduction" index={0} wide />
+      {project.overview?.length ? <CaseText eyebrow="Project overview" title={project.overviewHeading ?? "A digital foundation built around the people using it."}>{project.overview.map((text) => <p key={text}>{text}</p>)}</CaseText> : null}
+      {project.challenge ? <CaseText eyebrow={project.challenge.eyebrow} title={project.challenge.heading}>{project.challenge.paragraphs.map((text) => <p key={text}>{text}</p>)}{project.challenge.items ? <ul>{project.challenge.items.map((item) => <li key={item}>{item}</li>)}</ul> : null}</CaseText> : null}
+      {project.goals ? <CaseText eyebrow="Project goals" title="What the work needed to accomplish."><ol className="case-numbered">{project.goals.map((goal, index) => <li key={goal}><span>{String(index + 1).padStart(2, "0")}</span>{goal}</li>)}</ol></CaseText> : null}
+      {project.images?.[0] && project.visuals?.[0] ? <CaseVisual project={project} label={project.visuals[0].title} index={1} caption={project.visuals[0].caption} /> : null}
+      {project.approach?.length ? <CaseText eyebrow="The approach" title="A considered path from context to execution."><div className="case-phases">{project.approach.map((phase) => <section key={phase.title}><h3>{phase.title}</h3><p>{phase.body}</p></section>)}</div></CaseText> : null}
+      {project.solution ? <CaseText eyebrow="The solution" title={project.solution.heading}>{project.solution.paragraphs.map((text) => <p key={text}>{text}</p>)}{project.solution.highlights ? <ul>{project.solution.highlights.map((item) => <li key={item}>{item}</li>)}</ul> : null}</CaseText> : null}
+      {project.images?.[1] && project.visuals?.[1] ? <CaseVisual project={project} label={project.visuals[1].title} index={2} caption={project.visuals[1].caption} wide /> : null}
+      {project.images?.[2] && project.images?.[3] && project.visuals?.[2] ? <section className="case-gallery container" aria-label="Project visuals"><div className="case-gallery__heading"><p className="eyebrow">Project visuals</p><h2>{project.visuals[2].title}</h2><p>{project.visuals[2].caption}</p></div><div className="case-gallery__pair"><CaseVisualInner project={project} index={3} /><CaseVisualInner project={project} index={4} /></div></section> : null}
+      {!project.visuals && project.images?.length ? <section className="case-image-showcase container" aria-label="Trifold brochure design"><div className="case-image-showcase__grid">{project.images.map((_, index) => <CaseVisualInner project={project} index={index + 1} key={project.images?.[index]} />)}</div></section> : null}
+      {project.outcome ? <CaseText eyebrow="The outcome" title={project.outcome.heading}>{project.outcome.paragraphs.map((text) => <p key={text}>{text}</p>)}{project.outcome.improvements ? <ul>{project.outcome.improvements.map((item) => <li key={item}>{item}</li>)}</ul> : null}{project.results ? <ul>{project.results.map((item) => <li key={item}>{item}</li>)}</ul> : null}{project.testimonial ? <blockquote>“{project.testimonial.quote}”<cite>{project.testimonial.attribution}</cite></blockquote> : null}</CaseText> : null}
+      {project.services.length ? <section className="case-services"><div className="case-copy"><p className="eyebrow">Services provided</p><div className="case-services__links">{project.services.map((service) => <Link to={service.href} key={service.href}>{service.label}<span>↗</span></Link>)}</div></div></section> : null}
+      <section className="case-related container"><div className="case-gallery__heading"><p className="eyebrow">Related work</p><h2>More from the studio.</h2></div><div className="case-related__grid">{related.map((item) => <Link to={`/work/${item.slug}`} key={item.slug}><ProjectVisual title={item.title} alt={`${item.title} project preview`} /><span>{item.eyebrow}</span><h3>{item.title}</h3></Link>)}</div></section>
+      <section className="case-cta"><div className="case-copy"><p className="eyebrow">{project.cta?.eyebrow ?? "Start a project"}</p><h2>{project.cta?.heading ?? "Have something similar in mind?"}</h2><p>{project.cta?.copy ?? "Tell us what you are building, what needs improvement, or where your team needs experienced support."}</p><div><TallyButton className="btn btn-primary">{project.cta?.primaryLabel ?? "Start a Project"}</TallyButton><Link className="btn btn-ghost" to="/work">{project.cta?.secondaryLabel ?? "View More Work"}</Link></div></div></section>
+    </article>
+  );
+}
+
+function CaseText({ eyebrow, title, children }: { eyebrow: string; title: string; children: ReactNode }) { return <section className="case-section"><Reveal className="case-copy"><p className="eyebrow">{eyebrow}</p><h2>{title}</h2><div className="case-prose">{children}</div></Reveal></section>; }
+function CaseVisual({ project, label, index, caption, wide = false }: { project: CaseStudy; label: string; index: number; caption?: string; wide?: boolean }) { return <Reveal className={`case-media${wide ? " case-media--wide" : ""}`}><CaseVisualInner project={project} index={index} /><div className="case-caption"><span>{String(index + 1).padStart(2, "0")}</span><p><strong>{label}</strong>{caption ? ` — ${caption}` : ""}</p></div></Reveal>; }
+function CaseVisualInner({ project, index }: { project: CaseStudy; index: number }) {
+  const image = index === 0 ? project.heroImage : project.images?.[index - 1];
+  if (image) return <div className={`case-art case-art--image case-art--${project.slug} case-art--${index}`}><img src={image} alt={index === 0 ? project.imageAlt : project.imageAlts?.[index - 1] ?? `${project.title} project visual`} loading={index === 0 ? "eager" : "lazy"} decoding="async" /></div>;
+  return <div className={`case-art case-art--${project.slug} case-art--${index}`} role="img" aria-label={`${project.title} interface visual`}><div className="case-art__window"><BrowserBar label={project.slug === "restaurant-website-redesign" ? "hudsonscanadaspub.com" : project.slug === "innquest-canada" ? "innquest.com" : "inphonite.com"} /><div className="case-art__ui"><small>{project.eyebrow}</small><strong>{index % 2 === 0 ? project.introduction : project.visuals?.[Math.min(index - 1, 2)]?.title ?? project.title}</strong><div className="case-art__lines"><i /><i /><i /></div><b>{index % 2 === 0 ? "Explore the experience" : "Continue"} →</b></div></div></div>;
 }
 
 type WorkItem = {
@@ -1000,9 +1310,11 @@ function WorkSection({
               <h3 className="work-title">{item.title}</h3>
               <p className="work-type">{item.businessType}</p>
               <p className="work-desc">{item.description}</p>
-              <a className="card-link" href={item.url} target="_blank" rel="noopener noreferrer">
+              {"slug" in item ? <Link className="card-link" to={`/work/${item.slug}`}>
                 {linkLabel}<span className="link-arrow" aria-hidden="true">↗</span>
-              </a>
+              </Link> : <a className="card-link" href={item.url} target="_blank" rel="noopener noreferrer">
+                {linkLabel}<span className="link-arrow" aria-hidden="true">↗</span>
+              </a>}
             </Reveal>
           ))}
         </div>
@@ -1012,36 +1324,43 @@ function WorkSection({
 }
 
 function SampleWebsitesSection({ standalone = false }: { standalone?: boolean }) {
+  const selectedWork = studioWork
+    .map((project, displayOrder) => ({ project, displayOrder }))
+    .filter(({ project }) => !("showOnHomepage" in project) || project.showOnHomepage !== false)
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+    .slice(0, 3)
+    .map(({ project }) => project);
+
   return (
     <section className={`work-preview${standalone ? " page-section" : ""}`}>
       <div className="container">
         {!standalone ? (
           <SectionHeading
-            eyebrow="Sample websites"
-            title="A few demos of what thoughtful digital presence can feel like."
-            intro="These concept sites show different tones, industries, and user journeys without turning the homepage into a full portfolio."
+            eyebrow="Latest Work"
+            title="Thoughtful digital work, made tangible."
+            intro="A selection of websites, product interfaces, and digital experiences designed to make complex work clearer and easier to use."
           />
         ) : null}
         <div className="work-grid work-grid--editorial">
-          {sampleWebsites.map((website) => (
-            <Reveal as="article" className="work-card" key={website.title}>
-              <ProjectVisual title={website.title} />
-              <h3 className="work-title">{website.title}</h3>
-              <p className="work-type">{website.businessType}</p>
-              <p className="work-desc">{website.description}</p>
-              <a className="card-link" href={website.url} target="_blank" rel="noopener">
-                View Demo<span className="link-arrow" aria-hidden="true">↗</span>
-              </a>
+          {selectedWork.map((project) => (
+            <Reveal as="article" className="work-card" key={project.title}>
+              <ProjectVisual title={project.title} alt={`${project.title} project preview`} />
+              <h3 className="work-title">{project.title}</h3>
+              <p className="work-type">{project.businessType}</p>
+              <p className="work-desc">{project.description}</p>
+              <Link className="card-link" to={`/work/${project.slug}`}>
+                View Project<span className="link-arrow" aria-hidden="true">↗</span>
+              </Link>
             </Reveal>
           ))}
         </div>
-        {/* {!standalone ? (
+        {!standalone ? (
           <Reveal className="section-action">
             <Link className="text-link" to="/work">
-              View sample work
+              View Our Work
             </Link>
           </Reveal>
-        ) : null} */}
+        ) : null}
       </div>
     </section>
   );
@@ -1078,15 +1397,14 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
           <SectionHeading
             eyebrow="The people"
             title="The people behind the work."
-            intro="Nicole Buloran and Nick Castillo bring product design, web design, and development together in one small studio."
+            intro="Fractionl Studio combines product design, digital strategy, and development experience. Meet the people who stay closely involved from the first conversation through the finished work."
           />
         ) : (
           <Reveal className="section-head section-head--wide">
             <p className="eyebrow">The people</p>
             <h2 className="section-title">The people behind the work.</h2>
             <p className="section-intro page-intro">
-              Nicole Design &amp; Co. combines design strategy and development expertise. Explore our individual portfolios to learn more about
-              our experience and selected projects.
+              Fractionl Studio combines product design, web design, software development, and digital strategy. We stay closely involved in the work and bring in additional specialists only when a project genuinely requires them.
             </p>
           </Reveal>
         )}
@@ -1125,7 +1443,7 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
         {!standalone ? (
           <Reveal className="section-action">
             <Link className="text-link" to="/team">
-              Meet the team
+              Meet the Team
             </Link>
           </Reveal>
         ) : null}
@@ -1143,11 +1461,10 @@ function ContactPage() {
             Contact
           </Reveal>
           <Reveal as="h1" className="page-title contact-page-title">
-            Let's Talk About What You're Building
+            Tell us what you are building—or what is no longer working.
           </Reveal>
           <Reveal as="p" className="page-hero-sub contact-page-sub">
-            Whether you need a new website, ongoing digital support, product design, or custom development help, start by sending us a quick note
-            through the inquiry bubble.
+            Whether you are launching a new business, replacing an outdated website, building a digital product, or adding experienced capacity to your team, send us a short note about what you need.
           </Reveal>
           <Reveal className="hero-actions">
             <TallyButton className="btn btn-primary">Start a Project</TallyButton>
@@ -1160,7 +1477,7 @@ function ContactPage() {
 
       <section className="services contact-page-section contact-page-section--tint">
         <div className="container">
-          <SectionHeading eyebrow="Inquiry options" title="What Can We Help With?" />
+          <SectionHeading eyebrow="Inquiry options" title="What can we help with?" />
           <div className="services-grid contact-options-grid">
             {contactInquiryOptions.map((option) => (
               <Reveal as="article" className="service-card contact-option-card" key={option.title}>
@@ -1177,7 +1494,7 @@ function ContactPage() {
         <div className="container contact-info-grid">
           <Reveal>
             <p className="eyebrow">Helpful details</p>
-            <h2 className="section-title">What Should You Include?</h2>
+            <h2 className="section-title">What should you include?</h2>
             <p className="section-intro">You do not need to have everything figured out. A short message is enough to start.</p>
           </Reveal>
           <Reveal>
@@ -1192,7 +1509,7 @@ function ContactPage() {
 
       <section className="process contact-page-section contact-page-section--tint">
         <div className="container">
-          <SectionHeading eyebrow="Process" title="What Happens Next?" />
+          <SectionHeading eyebrow="What happens next" title="A straightforward next step." />
           <ol className="process-list">
             {contactNextSteps.map((step, index) => (
               <Reveal as="li" className="process-step" key={step.title}>
@@ -1211,8 +1528,8 @@ function ContactPage() {
         <div className="container contact-info-grid">
           <Reveal>
             <p className="eyebrow">Alternative contact</p>
-            <h2 className="section-title">Prefer Email?</h2>
-            <p className="section-intro">You can also reach us directly at:</p>
+            <h2 className="section-title">Prefer email?</h2>
+            <p className="section-intro">You can also reach us directly.</p>
           </Reveal>
           <Reveal className="contact-direct">
             <p className="footer-label">Email</p>
@@ -1221,6 +1538,7 @@ function ContactPage() {
             </a>
             <p className="footer-label">Location</p>
             <p>{site.location}</p>
+            <p>Working with clients across Canada and remotely.</p>
           </Reveal>
         </div>
       </section>
@@ -1228,10 +1546,10 @@ function ContactPage() {
       <section className="contact">
         <div className="container contact-inner">
           <Reveal as="h2" className="contact-title">
-            Ready to Start?
+            Ready to start?
           </Reveal>
           <Reveal as="p" className="contact-text">
-            Use the inquiry bubble to tell us what you're working on. We'll take it from there.
+            Use the inquiry button to tell us what you are working on. We will take it from there.
           </Reveal>
           <Reveal className="contact-actions">
             <TallyButton className="btn btn-primary btn-lg">Start a Project</TallyButton>
@@ -1247,14 +1565,13 @@ function ContactSection({ standalone = false }: { standalone?: boolean }) {
     <section className={`contact${standalone ? " contact--page" : ""}`}>
       <div className="container contact-inner">
         <Reveal as="p" className="eyebrow">
-          Get in touch
+          Work with Fractionl
         </Reveal>
         <Reveal as="h2" className="contact-title">
-          Need a design and development partner?
+          Need an experienced design and development partner?
         </Reveal>
         <Reveal as="p" className="contact-text">
-          Whether you're launching something new, improving an existing product, or need extra design support, we'd love to hear what you're
-          working on.
+          Tell us what you are building, where your team needs support, or what is no longer working. We will help you determine the most useful next step.
         </Reveal>
         <Reveal>
           <a className="contact-email" href={`mailto:${site.email}`}>
@@ -1300,6 +1617,7 @@ function Footer() {
       <div className="container footer-grid">
         <div className="footer-brand">
           <Brand footer />
+          <p>Digital design and development support for founders, growing businesses, agencies, and internal teams.</p>
           <p className="footer-loc">{site.location}</p>
           <a className="footer-mail" href={`mailto:${site.email}`}>
             {site.email}
@@ -1320,7 +1638,7 @@ function Footer() {
         ))}
       </div>
       <div className="container footer-bottom">
-        <p>&copy; {year} Nicole Design &amp; Co. All rights reserved.</p>
+        <p>&copy; {year} Fractionl Studio. All rights reserved.</p>
         <p>Designed &amp; built in Edmonton, AB.</p>
       </div>
     </footer>
