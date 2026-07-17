@@ -332,6 +332,7 @@ function HomePage() {
     <>
       <Hero />
       <AboutSection />
+      <WhoWeHelpSection />
       <DeliverablesShowcase />
       <ServicesSection />
       <ProcessSection />
@@ -388,13 +389,25 @@ function InsightsPage() {
 }
 
 function DeliverablesShowcase() {
+  const points = [
+    { title: "Direct Access", body: "Work closely with the people thinking through, designing, and building the project—not a chain of account managers." },
+    { title: "Connected Disciplines", body: "Strategy, design, and development stay aligned throughout the work instead of being handed off between disconnected teams." },
+    { title: "Flexible by Design", body: "Bring us in for a defined project, continued support, or collaboration alongside the people already on your team." },
+  ];
+
   return (
-    <section className="deliverables-showcase" aria-label="Examples of studio deliverables">
+    <section className="deliverables-showcase" aria-label="Why work with Fractionl Studio">
       <div className="container deliverables-layout">
         <Reveal className="deliverables-copy">
-          <p className="eyebrow">Built around real work</p>
-          <h2 className="section-title">The digital experiences your customers and team actually use.</h2>
-          <p className="section-intro">From the website that introduces your business to the systems that keep work moving behind the scenes, we focus on the parts of your digital experience that need to be clear, useful, and reliable.</p>
+          <p className="eyebrow">A different kind of studio</p>
+          <h2 className="section-title">Close collaboration without unnecessary layers.</h2>
+          <div className="studio-differences">
+            {points.map((point, index) => (
+              <div className="studio-difference" key={point.title}>
+                <span>0{index + 1}</span><h3>{point.title}</h3><p>{point.body}</p>
+              </div>
+            ))}
+          </div>
         </Reveal>
         <Reveal className="deliverables-canvas">
           <div className="deliverable-browser">
@@ -467,16 +480,15 @@ function Hero() {
             Digital Design &amp; Development Studio
           </Reveal>
           <Reveal as="h1" className="hero-title">
-            Experienced design and development, <span>ready when you need it.</span>
+            Custom digital products <span>for your next move.</span>
           </Reveal>
           <Reveal as="p" className="hero-sub">
-            Fractionl Studio helps founders, growing businesses, and internal teams plan, design, build, and support websites, web applications, and digital products.
-            <br /><br />Bring us in for a project, a temporary capacity gap, or ongoing digital support.
+            Fractionl Studio brings strategy, design, and development together to create websites, web applications, and digital experiences for founders, growing businesses, and internal teams across Canada and the U.S.
           </Reveal>
           <Reveal className="hero-actions">
             <TallyButton className="btn btn-primary">Start a Project <span aria-hidden="true">↗</span></TallyButton>
-            <Link to="/services" className="btn btn-ghost">
-              Explore Our Services
+            <Link to="/work" className="btn btn-ghost">
+              Explore Our Work
             </Link>
           </Reveal>
         </div>
@@ -596,10 +608,10 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
     <section className={`about${standalone ? " page-section" : ""}`}>
       <div className="container about-grid">
         <Reveal as="p" className="eyebrow">
-          A small, experienced studio
+          {standalone ? "A small, experienced studio" : "Built around the work"}
         </Reveal>
         <Reveal className="about-body">
-          <h2 className="about-lead">{standalone ? "Your Design & Development Partner" : "Senior thinking. Practical execution."}</h2>
+          <h2 className="about-lead">{standalone ? "Your Design & Development Partner" : "Strategy, design, and development working together."}</h2>
           {standalone ? (
             <>
               <p className="about-text">Fractionl Studio partners with businesses to bring ideas to life and support their growth online.</p>
@@ -612,14 +624,40 @@ function AboutSection({ standalone = false }: { standalone?: boolean }) {
           ) : (
             <>
               <p className="about-text">
-                We bring product design, web design, software development, and ongoing support together—so you can move from an idea to a finished digital experience without coordinating a different provider for every step.
+                Good digital work rarely fits neatly into one discipline. We bring product thinking, thoughtful design, and practical development together from the start—so ideas move forward with fewer gaps between planning and execution.
               </p>
+              <p className="about-text">Whether you are launching something new, improving what already exists, or tackling an important project within your team, we shape the work around what the business actually needs.</p>
               <Link className="text-link" to="/about">
-                Learn About Fractionl
+                About Fractionl Studio
               </Link>
             </>
           )}
         </Reveal>
+      </div>
+    </section>
+  );
+}
+
+const homepageAudiences = [
+  { title: "Launching Something New", description: "Turn a business idea, service, or product concept into a focused website, MVP, web application, or digital experience." },
+  { title: "Improving What Already Exists", description: "Redesign an outdated website, simplify a difficult experience, modernize an existing product, or replace a process that no longer works." },
+  { title: "Moving a Team Project Forward", description: "Bring in experienced strategy, design, development, or creative support for a key initiative without rebuilding your entire internal team." },
+] as const;
+
+function WhoWeHelpSection() {
+  return (
+    <section className="services audience-section">
+      <div className="container">
+        <SectionHeading eyebrow="Where we fit" title="Built for the stage you are in." />
+        <div className="services-grid services-grid--three audience-grid">
+          {homepageAudiences.map((item, index) => (
+            <Reveal as="article" className="service-card" key={item.title}>
+              <span className="service-index">0{index + 1}</span>
+              <h3 className="service-title">{item.title}</h3>
+              <p className="service-desc">{item.description}</p>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1060,25 +1098,25 @@ const homepageServices = [
   {
     index: "01",
     title: "Technology Consulting",
-    description: "Product strategy, MVP planning, system architecture, and guidance on what to build, buy, improve, or skip.",
+    description: "Clarify the opportunity, define the right approach, and make informed decisions before committing time and budget to a build.",
     to: "/services/technology-consulting",
   },
   {
     index: "02",
     title: "Website & Web Application Design + Development",
-    description: "Custom websites, SaaS products, dashboards, portals, and digital tools designed and built around real business needs.",
-    to: "/services",
+    description: "Custom websites, platforms, portals, dashboards, and digital tools designed around how your customers and business actually work.",
+    to: "/services/website-design-development",
   },
   {
     index: "03",
     title: "Fractional Product & Creative Support",
-    description: "Experienced product design and ongoing creative support for projects, launches, overflow, leave coverage, and recurring design needs.",
-    to: "/services",
+    description: "Experienced product design and creative support for launches, product initiatives, overflow, temporary coverage, and recurring needs.",
+    to: "/services/fractional-product-design",
   },
   {
     index: "04",
     title: "Managed Hosting & Ongoing Support",
-    description: "Hosting, monitoring, updates, maintenance, and responsive technical support that keeps your digital work running smoothly.",
+    description: "Reliable hosting, maintenance, monitoring, updates, and technical support that keeps your digital work healthy after launch.",
     to: "/services/managed-hosting-support",
   },
 ] as const;
@@ -1090,8 +1128,8 @@ function ServicesSection({ standalone = false }: { standalone?: boolean }) {
         {!standalone ? (
           <SectionHeading
             eyebrow="What we do"
-            title={<>Strategy, design, development,<br />and support in one studio.</>}
-            intro="Bring us in for a single project, a temporary capacity gap, or ongoing help. We shape the engagement around the problem—not the other way around."
+            title={<>The expertise to shape, build,<br />and support digital work.</>}
+            intro="Work with Fractionl on a focused project, an evolving digital product, or continued support after launch."
             twoLine
           />
         ) : null}
@@ -1112,7 +1150,7 @@ function ServicesSection({ standalone = false }: { standalone?: boolean }) {
         {!standalone ? (
           <Reveal className="section-action">
             <Link className="text-link" to="/services">
-              Explore all services
+              Explore All Services
             </Link>
           </Reveal>
         ) : null}
@@ -1179,19 +1217,24 @@ function ProcessPage() {
 }
 
 function ProcessSection({ standalone = false }: { standalone?: boolean }) {
+  const steps = standalone ? processSteps : [
+    { index: "01", title: "Understand", description: "We learn about the business, the people involved, the current challenges, and what the work needs to accomplish." },
+    { index: "02", title: "Shape", description: "We define the right direction through strategy, structure, user flows, content, prototypes, and visual design." },
+    { index: "03", title: "Build", description: "We develop, test, refine, and launch the experience with clear communication throughout the project." },
+    { index: "04", title: "Support", description: "Where it makes sense, we stay involved through hosting, maintenance, continued improvements, or ongoing design and development." },
+  ];
   return (
     <section className={`process${standalone ? " page-section" : " process--preview"}`}>
       <div className="container">
         {!standalone ? (
           <SectionHeading
             eyebrow="How we work"
-            title={<>A clear process,<br />without unnecessary layers.</>}
-            intro="We start by understanding what needs to change, then shape the right approach around your goals, users, budget, and timeline."
+            title={<>A clear path from idea<br />to finished work.</>}
             twoLine
           />
         ) : null}
-        <ol className="process-list">
-          {processSteps.map((step) => (
+        <ol className={`process-list${!standalone ? " process-list--four" : ""}`}>
+          {steps.map((step) => (
             <Reveal as="li" className="process-step" key={step.title}>
               <span className="process-num">{step.index}</span>
               <div className="process-body">
@@ -1337,8 +1380,8 @@ function SampleWebsitesSection({ standalone = false }: { standalone?: boolean })
         {!standalone ? (
           <SectionHeading
             eyebrow="Latest Work"
-            title="Thoughtful digital work, made tangible."
-            intro="A selection of websites, product interfaces, and digital experiences designed to make complex work clearer and easier to use."
+            title="Ideas made useful."
+            intro="A selection of websites, digital products, product features, and creative work designed to make information clearer, experiences easier, and businesses more effective."
           />
         ) : null}
         <div className="work-grid work-grid--editorial">
@@ -1357,7 +1400,7 @@ function SampleWebsitesSection({ standalone = false }: { standalone?: boolean })
         {!standalone ? (
           <Reveal className="section-action">
             <Link className="text-link" to="/work">
-              View Our Work
+              View All Work
             </Link>
           </Reveal>
         ) : null}
@@ -1395,9 +1438,9 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
       <div className="container">
         {!standalone ? (
           <SectionHeading
-            eyebrow="The people"
-            title="The people behind the work."
-            intro="Fractionl Studio combines product design, digital strategy, and development experience. Meet the people who stay closely involved from the first conversation through the finished work."
+            eyebrow="The people behind Fractionl"
+            title="Two disciplines. One connected studio."
+            intro="Fractionl Studio combines Nicole’s experience in product, UX/UI, web, and visual design with Nick’s background in software, web application, and WordPress development. We stay closely involved from the first conversation through the final delivery, keeping decisions and execution connected along the way."
           />
         ) : (
           <Reveal className="section-head section-head--wide">
@@ -1442,8 +1485,8 @@ function TeamSection({ standalone = false }: { standalone?: boolean }) {
         </div>
         {!standalone ? (
           <Reveal className="section-action">
-            <Link className="text-link" to="/team">
-              Meet the Team
+            <Link className="text-link" to="/about">
+              Meet Nicole and Nick
             </Link>
           </Reveal>
         ) : null}
@@ -1565,13 +1608,13 @@ function ContactSection({ standalone = false }: { standalone?: boolean }) {
     <section className={`contact${standalone ? " contact--page" : ""}`}>
       <div className="container contact-inner">
         <Reveal as="p" className="eyebrow">
-          Work with Fractionl
+          Start a conversation
         </Reveal>
         <Reveal as="h2" className="contact-title">
-          Need an experienced design and development partner?
+          What are you trying to move forward?
         </Reveal>
         <Reveal as="p" className="contact-text">
-          Tell us what you are building, where your team needs support, or what is no longer working. We will help you determine the most useful next step.
+          Tell us what you are building, improving, or trying to solve. We will help you make sense of the next step and whether Fractionl is the right fit for the work.
         </Reveal>
         <Reveal>
           <a className="contact-email" href={`mailto:${site.email}`}>

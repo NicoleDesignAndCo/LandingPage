@@ -1146,6 +1146,13 @@ h1, h2, h3 { text-wrap: balance; }
 
 /* Tangible studio and project imagery */
 .deliverables-showcase { padding-block:var(--section-y);background:#11152e;color:white;overflow:hidden; }
+.studio-differences { display:grid;gap:1.25rem;margin-top:clamp(2rem,4vw,3.5rem); }
+.studio-difference { display:grid;grid-template-columns:2.5rem 1fr;gap:.35rem 1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.2); }
+.studio-difference span { grid-row:1 / span 2;color:var(--accent);font-size:.72rem;font-weight:800;letter-spacing:.12em; }
+.studio-difference h3 { font-size:1.15rem; }
+.studio-difference p { color:rgba(255,255,255,.72);line-height:1.55; }
+.audience-section { background:var(--bg); }
+.audience-grid .service-card { min-height:100%; }
 .deliverables-layout { display:grid;grid-template-columns:minmax(260px,.7fr) minmax(480px,1.3fr);gap:clamp(3rem,8vw,7rem);align-items:center; }
 .deliverables-copy .eyebrow { color:#8f9aff; }.deliverables-copy .section-intro{color:rgba(255,255,255,.68)}
 .deliverables-canvas { position:relative;min-height:520px; }
@@ -1295,6 +1302,7 @@ body {
 
 .process { background:linear-gradient(150deg,#eef0ff,#f9f9ff 58%,#e9fbff); }
 .process-list { gap:16px;background:transparent;border:0;counter-reset:steps; }
+.process-list--four { grid-template-columns:repeat(4,minmax(0,1fr)); }
 .process-step { background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);border-radius:22px;min-height:260px;justify-content:space-between;box-shadow:0 12px 35px rgba(31,41,128,.06); }
 .process-num { font-family:var(--sans);font-weight:750;font-size:1rem;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:white; }
 
@@ -1323,9 +1331,11 @@ body {
 }
 @media (max-width: 860px) {
   .site-header { padding-top:0 }.site-header.scrolled .header-inner{border-radius:0;border-inline:0}.about-grid{grid-template-columns:1fr}.about-body{padding:2rem}.team-grid--preview .team-card{grid-template-columns:110px 1fr}
+  .process-list--four { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 @media (max-width: 540px) {
   .hero { padding-top:7.5rem }.hero-title{font-size:clamp(3.35rem,17vw,5rem)}.hero-sub{font-size:1rem}.hero-stage{min-height:410px;margin-top:1rem}.product-window{width:94%}.product-window__body{min-height:250px;grid-template-columns:44px 1fr}.product-sidebar{padding:12px 8px;gap:14px}.product-dashboard{padding:1rem}.product-dashboard h2{font-size:1.25rem;margin-top:.8rem}.dashboard-metrics{margin-top:1rem}.dashboard-chart{height:65px}.stage-card--left{left:-2%;bottom:8%}.stage-card--right{right:-2%;top:10%}.stage-note--top{top:1%}.stage-note--bottom{display:none}.hero-disciplines{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}.hero-disciplines li::after{display:none}.about-body::after{font-size:12rem}.team-grid--preview .team-card{grid-template-columns:82px 1fr;padding:1rem;gap:1rem}.team-grid--preview .team-name{font-size:1.2rem}.work-card{min-height:360px}.section-title{font-size:clamp(2.4rem,12vw,3.7rem)}
+  .process-list--four { grid-template-columns:1fr; }
 }
 
 /* Final polish: quieter surfaces, sharper rhythm, accessible interaction */
