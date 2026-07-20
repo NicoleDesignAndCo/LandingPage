@@ -45,6 +45,10 @@ const pageMeta: Record<string, { title: string; description: string }> = {
     title: "Services | Fractionl Studio",
     description: "Product design, UX/UI design, web design, and development services for growing businesses.",
   },
+  "/services/fractional-product-design": {
+    title: "Fractional Product Design & Development | Fractionl Studio",
+    description: "Add an experienced fractional product designer, developer, or connected design and development support to your team for projects, leave coverage, overflow, launches, and ongoing product work.",
+  },
   "/process": {
     title: "How We Work | Fractionl Studio",
     description: "A simple, considered process for discovery, design, and implementation.",
@@ -732,7 +736,7 @@ const overviewServices = [
   { index: "01", slug: "technology-consulting", title: "Technology Consulting", visual: "strategy", description: "We help you decide what to build, what to buy, and what to skip before you spend money on development — so the technical decisions match the business problem you’re actually trying to solve.", bestFor: "Product strategy, MVP planning, system architecture, vendor & platform selection", detail: "Make confident technology decisions before they become expensive commitments.", includes: ["Product strategy", "MVP planning", "System architecture", "Vendor and platform selection"] },
   { index: "02", slug: "website-design-development", title: "Website Design & Development", visual: "website", description: "We design and build custom websites built to convert — fast load times, clear paths to contact or purchase, and a structure you can update yourself without calling us for every change.", bestFor: "New businesses, redesigns, service businesses, professional firms, local businesses", detail: "A clear, fast, conversion-focused website designed around your business.", includes: ["Website strategy", "UX and visual design", "Responsive development", "Flexible content management"] },
   { index: "03", slug: "web-applications", title: "Web Applications", visual: "application", description: "We design and build custom web applications that replace manual work with systems — dashboards, customer portals, booking flows, billing, and internal tools that cut down the hours your team spends on repetitive tasks.", bestFor: "Founders building a SaaS product, businesses with software that has outgrown its current support or development team", detail: "Purpose-built products and tools that turn repetitive work into reliable systems.", includes: ["SaaS products", "Dashboards and portals", "Booking and billing flows", "Internal tools"] },
-  { index: "04", slug: "fractional-product-design", title: "Fractional Product Designer", visual: "product", description: "Senior product design capacity for a project, a quarter, or a leave coverage gap — without the recruiting timeline or full-time overhead of hiring.", bestFor: "Startups, SaaS companies, agencies needing overflow, teams needing temporary or leave coverage", detail: "Experienced product design capacity that fits directly into your existing team.", includes: ["UX and UI design", "User flows and prototypes", "Design systems", "Developer collaboration"] },
+  { index: "04", slug: "fractional-product-design", title: "Fractional Product Design & Development", visual: "product", description: "Experienced product design and development support for launches, product initiatives, team gaps, leave coverage, overflow, and ongoing digital work.", bestFor: "Internal teams, agencies, founders, and businesses that need experienced capacity", detail: "Experienced product support, without the full-time hire.", includes: ["Product strategy and UX", "Product and UI design", "Development", "Ongoing support"] },
   { index: "05", slug: "creative-retainer", title: "Creative Retainer", visual: "creative", description: "A reserved block of design support each month, handled by a team that already knows your brand — so campaigns, landing pages, and sales collateral get done without briefing a new freelancer every time.", bestFor: "Businesses that need consistent creative output without an in-house hire", detail: "Reliable creative momentum from a team that already understands the brand.", includes: ["Campaign creative", "Landing pages", "Sales collateral", "Presentations and social assets"] },
   { index: "06", slug: "managed-hosting-support", title: "Managed Hosting & Ongoing Support", visual: "support", description: "We keep what we build — or what you already have — online, secure, and fast: backups, monitoring, updates, and a team that responds when something breaks.", bestFor: "Any business that doesn’t want website maintenance to become someone’s job", detail: "Quiet, dependable technical care that keeps your digital presence healthy.", includes: ["Managed hosting", "Backups and monitoring", "Security and updates", "Responsive technical support"] },
 ] as const;
@@ -1164,6 +1168,7 @@ function SingleServicePage() {
   const service = overviewServices.find((item) => item.slug === serviceSlug);
 
   if (!service) return <Navigate to="/services" replace />;
+  if (service.slug === "fractional-product-design") return <FractionalProductServicePage service={service} />;
   const content = servicePageContent[service.slug];
   const related = content.related.map((slug: string) => overviewServices.find((item) => item.slug === slug)).filter(Boolean) as (typeof overviewServices[number])[];
 
@@ -1189,6 +1194,68 @@ function SingleServicePage() {
       <section className="single-service__proof"><div className="container single-service__proof-grid"><Reveal className="single-service__proof-main"><span className="single-service__placeholder">{content.proofLabels[0]}</span><ServiceVisual type={service.visual} /></Reveal><Reveal className="single-service__proof-side"><span className="single-service__placeholder">{content.proofLabels[1]}</span><div className="single-service__proof-lines"><i/><i/><i/><b>Visual proof<br/>coming soon.</b></div></Reveal></div></section>
       <section className="single-service__related"><div className="container"><Reveal className="single-service__related-head"><p className="eyebrow">Related services</p><h2>Support around the edges, too.</h2></Reveal><div className="single-service__related-list">{related.map((item) => <Reveal as="article" key={item.slug}><span>{item.index}</span><h3>{item.title}</h3><Link to={`/services/${item.slug}`}>Explore <span aria-hidden="true">↗</span></Link></Reveal>)}</div></div></section>
       <section className="single-service__cta"><div className="container"><Reveal><p className="eyebrow">Start a conversation</p><h2>{content.cta}</h2><p>Tell us where you are, what is getting in the way, and what a better outcome would look like.</p><TallyButton className="btn single-service__cta-button">Discuss your project <span aria-hidden="true">↗</span></TallyButton></Reveal></div></section>
+    </div>
+  );
+}
+
+const fractionalSituations = [
+  "A product designer or developer is on leave",
+  "The internal team is at capacity",
+  "A launch or deadline needs additional support",
+  "An agency needs reliable overflow capacity",
+  "A founder needs experienced execution without building a full team",
+  "A product needs continued design and development after launch",
+  "The business needs specialized experience for a defined initiative",
+  "A backlog is growing faster than the existing team can address it",
+] as const;
+
+const fractionalSupport = [
+  { title: "Product Design Support", description: "Bring in experienced UX/UI and product design support for research, workflows, prototypes, design systems, product improvements, and new feature initiatives." },
+  { title: "Development Support", description: "Add experienced development capacity for websites, web applications, frontend implementation, WordPress work, technical improvements, and ongoing product delivery." },
+  { title: "Design and Development Together", description: "Keep product decisions and technical execution connected by bringing in both disciplines for a focused project or ongoing initiative." },
+] as const;
+
+const fractionalCapabilities = [
+  { title: "Product Strategy and UX", items: ["Product discovery", "Feature definition", "User flows", "Information architecture", "UX reviews", "Product improvements", "MVP planning"] },
+  { title: "Product and UI Design", items: ["Wireframes", "Interactive prototypes", "UX/UI design", "Responsive product interfaces", "Design systems", "Component libraries", "Developer-ready specifications"] },
+  { title: "Development", items: ["Frontend development", "Web application development", "WordPress development", "Design implementation", "Component development", "Existing product improvements", "Bug fixes and technical refinements"] },
+  { title: "Ongoing Support", items: ["Product backlog support", "Design and development retainers", "Temporary leave coverage", "Agency overflow", "Launch support", "Continued product iteration"] },
+] as const;
+
+const fractionalEngagements = [
+  { title: "Focused Project", description: "Bring Fractionl in for a defined product feature, redesign, website, application, or technical initiative with a clear scope and outcome." },
+  { title: "Embedded Support", description: "Add a product designer, developer, or connected design and development support alongside your existing team for a specific period or initiative." },
+  { title: "Ongoing Partnership", description: "Keep experienced product and technical support available through a recurring engagement as priorities and needs evolve." },
+] as const;
+
+const fractionalProcess = [
+  { title: "Understand", description: "We learn about the product, team, users, current challenges, technical environment, and the work that needs to move forward." },
+  { title: "Align", description: "We clarify priorities, responsibilities, communication, deliverables, and how Fractionl will work alongside the people already involved." },
+  { title: "Design and Build", description: "We complete the agreed product design, development, or connected delivery work while keeping decisions visible and communication clear." },
+  { title: "Continue or Handoff", description: "We can remain involved for continued support or document and hand off the work cleanly to your internal team." },
+] as const;
+
+function FractionalProductServicePage({ service }: { service: typeof overviewServices[number] }) {
+  return (
+    <div className="single-service single-service--product fractional-service">
+      <section className="single-service__hero"><div className="container single-service__hero-grid">
+        <Reveal className="single-service__hero-copy"><p className="eyebrow">Fractional Product Design &amp; Development</p><h1>Experienced product support, without the full-time hire.</h1><p className="single-service__statement">Bring experienced product design, development, or both into your team for the work that needs to move forward.</p><p className="single-service__description">Fractionl Studio supports founders, businesses, agencies, and internal teams with flexible access to product thinking, UX/UI design, prototyping, frontend and web development, and ongoing digital execution.</p><div className="hero-actions"><TallyButton className="btn btn-primary">Discuss Your Needs <span aria-hidden="true">↗</span></TallyButton><Link className="btn btn-ghost" to="/work">Explore Our Work</Link></div></Reveal>
+        <Reveal className="single-service__hero-visual"><ServiceVisual type={service.visual} /></Reveal>
+      </div></section>
+
+      <section className="single-service__problem"><div className="container"><Reveal className="single-service__cap-head"><p className="eyebrow">When extra capacity matters</p><h2>Support for the gaps your team needs to fill.</h2></Reveal><div className="single-service__cap-list">{fractionalSupport.map((item, index) => <Reveal as="article" className="single-service__cap" key={item.title}><span>0{index + 1}</span><h3>{item.title}</h3><p>{item.description}</p></Reveal>)}</div></div></section>
+
+      <section className="single-service__fit"><div className="container single-service__fit-grid"><Reveal><p className="eyebrow">Where we fit</p><h2>Flexible support for real team needs.</h2></Reveal><Reveal as="ul">{fractionalSituations.map((item) => <li key={item}>{item}</li>)}</Reveal></div></section>
+
+      <section className="single-service__capabilities"><div className="container"><Reveal className="single-service__cap-head"><p className="eyebrow">How we can support you</p><h2>Product thinking, design, and development where you need it.</h2></Reveal><div className="fractional-service__capability-grid">{fractionalCapabilities.map((group, index) => <Reveal as="article" className="fractional-service__capability" key={group.title}><span>0{index + 1}</span><h3>{group.title}</h3><ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul></Reveal>)}</div></div></section>
+
+      <section className="single-service__process fractional-service__engagements"><div className="container"><Reveal className="single-service__process-head"><p className="eyebrow">Flexible by design</p><h2>The right level of support for the work ahead.</h2></Reveal><div className="single-service__cap-list">{fractionalEngagements.map((item, index) => <Reveal as="article" className="single-service__cap" key={item.title}><span>0{index + 1}</span><h3>{item.title}</h3><p>{item.description}</p></Reveal>)}</div></div></section>
+
+      <section className="fractional-service__why"><div className="container fractional-service__why-grid"><Reveal><p className="eyebrow">Connected from thinking to execution</p><h2>Design and development that stay aligned.</h2></Reveal><Reveal className="fractional-service__why-copy"><p>Product work often slows down when strategy, design, and development are separated across different providers. Fractionl keeps the people shaping the experience connected to the people building it.</p><p>You receive experienced support without unnecessary management layers, disconnected handoffs, or the commitment of immediately expanding your full-time team.</p></Reveal></div></section>
+
+      <section className="single-service__process"><div className="container"><Reveal className="single-service__process-head"><p className="eyebrow">How we work</p><h2>A practical process shaped around your team.</h2></Reveal><ol className="single-service__process-list">{fractionalProcess.map((step, index) => <Reveal as="li" key={step.title}><span>0{index + 1}</span><div><h3>{step.title}</h3><p>{step.description}</p></div></Reveal>)}</ol></div></section>
+
+      <section className="single-service__cta"><div className="container"><Reveal><p className="eyebrow">Add the support your team needs</p><h2>Need a product designer, developer, or both?</h2><p>Tell us what your team is working on, where progress is getting stuck, and the type of support you need. We will help determine the most useful way for Fractionl to contribute.</p><div className="hero-actions fractional-service__cta-actions"><TallyButton className="btn single-service__cta-button">Discuss Your Needs <span aria-hidden="true">↗</span></TallyButton><a className="btn fractional-service__email" href="mailto:hello@fractionlstudio.com">hello@fractionlstudio.com</a></div></Reveal></div></section>
     </div>
   );
 }

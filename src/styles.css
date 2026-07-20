@@ -1724,6 +1724,29 @@ main:focus { outline: none; }
 @media(max-width:900px){.single-service__hero-grid,.single-service__problem-grid,.single-service__fit-grid{grid-template-columns:1fr}.single-service__hero-visual>div{min-height:520px}.single-service__cap-head,.single-service__process-head,.single-service__related-head{grid-template-columns:1fr}.single-service__process-list{grid-template-columns:1fr 1fr}.single-service__process-list li:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}.single-service__process-list li:nth-child(4){border-top:1px solid var(--line)}.single-service__proof-grid{grid-template-columns:1fr}.single-service__proof-side{min-height:360px}}
 @media(max-width:600px){.single-service__hero-copy h1{font-size:clamp(3.2rem,15vw,4.8rem)}.single-service__hero-visual>div,.single-service__feature-canvas>div{min-height:380px}.single-service__cap{grid-template-columns:2.5rem 1fr}.single-service__cap p{grid-column:2}.single-service__feature-head{grid-template-columns:1fr}.single-service__process-list{grid-template-columns:1fr}.single-service__process-list li+li{padding-left:0;border-left:0;border-top:1px solid var(--line)}.single-service__process-list h3{margin-top:2rem}.single-service__proof-main>div{min-height:390px}.single-service__related-list article{grid-template-columns:2.5rem 1fr}.single-service__related-list a{grid-column:2}.single-service__feature-canvas .mock-site{min-height:250px}}
 
+.fractional-service .single-service__hero-copy h1 { max-width:12ch; font-size:clamp(3.35rem,6.2vw,6.3rem); }
+.fractional-service .single-service__hero-copy .hero-actions { display:flex; flex-wrap:wrap; gap:.75rem; }
+.fractional-service .single-service__problem .single-service__cap-list,
+.fractional-service__engagements .single-service__cap-list { margin-top:clamp(3rem,6vw,5rem); }
+.fractional-service__capability-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin-top:clamp(4rem,8vw,7rem); background:#cfd3ee; border:1px solid #cfd3ee; }
+.fractional-service__capability { padding:clamp(2rem,4vw,3.5rem); background:#f3f4ff; }
+.fractional-service__capability>span { color:var(--service-blue); font-size:.72rem; font-weight:800; letter-spacing:.12em; }
+.fractional-service__capability h3 { margin-top:1.5rem; font-size:clamp(1.5rem,2.5vw,2.2rem); letter-spacing:-.04em; }
+.fractional-service__capability ul { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem 1.5rem; margin:2rem 0 0; padding:0; list-style:none; }
+.fractional-service__capability li { padding-top:.8rem; border-top:1px solid #cfd3ee; color:var(--ink-soft); line-height:1.45; }
+.fractional-service__why { padding:var(--section-y) 0; background:#eef0ff; }
+.fractional-service__why-grid { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr); gap:clamp(4rem,10vw,10rem); }
+.fractional-service__why h2 { max-width:13ch; margin-top:1.2rem; font-size:clamp(3rem,5vw,5.2rem); line-height:.96; }
+.fractional-service__why-copy { padding-top:2.2rem; border-top:1px solid #cfd3ee; }
+.fractional-service__why-copy p { font-size:clamp(1.05rem,1.5vw,1.22rem); line-height:1.75; }
+.fractional-service__why-copy p+p { margin-top:1.5rem; }
+.fractional-service__cta-actions { justify-content:center; margin-top:2rem; }
+.fractional-service__cta-actions .single-service__cta-button { margin-top:0; }
+.fractional-service__email { border:1px solid rgba(255,255,255,.5); color:white; }
+.fractional-service__email:hover { background:white; color:var(--service-blue); }
+@media(max-width:900px) { .fractional-service__why-grid { grid-template-columns:1fr; } .fractional-service__capability-grid { grid-template-columns:1fr; } }
+@media(max-width:600px) { .fractional-service__capability ul { grid-template-columns:1fr; } .fractional-service__cta-actions { align-items:stretch; } .fractional-service__cta-actions .btn { width:100%; } .fractional-service__email { font-size:.85rem; } }
+
 /* Insights — intentionally compact until the editorial archive launches */
 .insights-coming-soon {
   --insights-blue: #2838F7;
