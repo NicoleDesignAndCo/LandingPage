@@ -150,7 +150,7 @@ button { font: inherit; }
 }
 
 .brand { display: inline-flex; align-items: center; flex: 0 0 auto; }
-.brand-logo { width: 42.5px; height: auto; }
+.brand-logo { width: 105px; height: auto; }
 
 .nav-desktop { display: flex; align-items: center; gap: clamp(1.2rem, 2.4vw, 2.4rem); }
 .nav-desktop > a {
@@ -886,7 +886,7 @@ button { font: inherit; }
   padding-bottom: 3rem;
   border-bottom: 1px solid var(--line-soft);
 }
-.brand--footer .brand-logo { width: 42.5px; }
+.brand--footer .brand-logo { width: 105px; }
 .footer-loc { color: var(--ink-soft); margin-top: 1.1rem; font-size: 0.98rem; }
 .footer-mail {
   display: inline-block;
@@ -953,7 +953,7 @@ button { font: inherit; }
 @media (max-width: 540px) {
   body { font-size: 16px; }
   .header-inner { height: 66px; }
-  .brand-logo { width: 32.5px; }
+  .brand-logo { width: 85px; }
   .hero-actions .btn { flex: 1; }
   .tally-floating-button {
     right: max(0.75rem, env(safe-area-inset-right));
@@ -1395,7 +1395,7 @@ main:focus { outline: none; }
 }
 
 @media (max-width: 980px) {
-  .brand-logo { width: 37.5px; }
+  .brand-logo { width: 95px; }
   .hero-stage { min-height: 510px; }
   .hero-stage::before { inset: 7% 5%; }
 }
@@ -1412,7 +1412,7 @@ main:focus { outline: none; }
 
 @media (max-width: 540px) {
   :root { --gutter: 1.1rem; --section-y: 4.5rem; }
-  .brand-logo { width: 32.5px; }
+  .brand-logo { width: 85px; }
   .hero { padding-top: 7rem; padding-bottom: 4rem; }
   .hero-title { font-size: clamp(3rem, 15vw, 4.35rem); }
   .hero-actions { flex-direction: column; }
