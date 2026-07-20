@@ -4,6 +4,7 @@ import nicoleHeadshot from "../nicole.jpeg";
 export const site = {
   name: "Fractionl Studio",
   domain: "https://fractionlstudio.com",
+  logo: "/brand/fractionl-studio-logo-nav.png",
   email: "hello@fractionlstudio.com",
   location: "Edmonton, Alberta",
   tallyFormId: "xXzMGr",

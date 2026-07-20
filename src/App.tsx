@@ -1,7 +1,8 @@
 import { ElementType, ReactNode, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useParams } from "react-router-dom";
-import { caseStudies, founderWork, processSteps, sampleWebsites, site, studioWork, team, type CaseStudy } from "./data";
+import { caseStudies, caseStudyServices, founderWork, processSteps, sampleWebsites, services, site, studioWork, team, type CaseStudy } from "./data";
+import { getInsightBySlug, insightCategories, publishedInsights, toHeadingId, type Insight, type InsightContentBlock } from "./insights";
 import { useReveal, useScrolled } from "./hooks";
 
 declare global {
@@ -27,6 +28,7 @@ const navItems = [
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
   { to: "/work", label: "Work" },
+  { to: "/insights", label: "Insights" },
   // { to: "/process", label: "How We Work" },
   { to: "/contact", label: "Contact" },
 ];
@@ -86,6 +88,7 @@ function App() {
         <Route path="/team" element={<TeamPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/insights" element={<InsightsPage />} />
+        <Route path="/insights/:slug" element={<SingleInsightPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
@@ -178,6 +181,7 @@ function Seo() {
             "From websites and marketing materials to software products and custom digital solutions, we help businesses design, build, and improve their digital presence.",
           email: site.email,
           url: `${site.domain}/`,
+          logo: `${site.domain}${site.logo}`,
           address: {
             "@type": "PostalAddress",
             addressLocality: "Edmonton",
@@ -250,13 +254,8 @@ function Header() {
 
 function Brand({ footer = false }: { footer?: boolean }) {
   return (
-    <Link className={`brand${footer ? " brand--footer" : ""}`} to="/" aria-label="Fractionl Studio home">
-      <span className="brand-mark" aria-hidden="true">
-        &amp;
-      </span>
-      <span className="brand-word">
-        Fractionl Studio
-      </span>
+    <Link className={`brand${footer ? " brand--footer" : ""}`} to="/">
+      <img className="brand-logo" src={site.logo} alt="Fractionl Studio" />
     </Link>
   );
 }
@@ -348,48 +347,191 @@ function HomePage() {
 }
 
 function InsightsPage() {
-  return (
-    <div className="insights-coming-soon">
-      <section className="insights-coming-soon__hero">
-        <div className="container insights-coming-soon__grid">
-          <div className="insights-coming-soon__copy">
-            <Reveal as="p" className="eyebrow">Insights</Reveal>
-            <Reveal as="h1" className="insights-coming-soon__title">
-              Insights are<br />on the <em>way.</em>
-            </Reveal>
-            <Reveal as="p" className="insights-coming-soon__intro">
-              We’re putting together practical ideas, lessons, and perspectives on design, development, digital products, websites, and the work behind building better digital experiences.
-            </Reveal>
-            <Reveal className="insights-coming-soon__actions">
-              <Link className="btn insights-coming-soon__cta" to="/contact">
-                Start a conversation <span aria-hidden="true">↗</span>
-              </Link>
-              <span>Check back soon.</span>
-            </Reveal>
-          </div>
+  const location = useLocation();
+  const requestedCategory = new URLSearchParams(location.search).get("category");
+  const initialCategory = requestedCategory && insightCategories.includes(requestedCategory as (typeof insightCategories)[number]) ? requestedCategory : "All Insights";
+  const [category, setCategory] = useState(initialCategory);
+  const featured = publishedInsights.find((insight) => insight.featured) ?? publishedInsights[0];
+  const categories = insightCategories.filter((value) => publishedInsights.some((insight) => insight.category === value));
+  const filtered = publishedInsights.filter((insight) => insight.id !== featured?.id && (category === "All Insights" || insight.category === category));
 
-          <Reveal className="insights-signal" aria-label="A visual of ideas taking shape">
-            <div className="insights-signal__meta">
-              <span>Field notes</span>
-              <span>Issue 001</span>
-            </div>
-            <div className="insights-signal__field" aria-hidden="true">
-              {Array.from({ length: 9 }, (_, index) => <i key={index} />)}
-              <div className="insights-signal__orb" />
-              <div className="insights-signal__card">
-                <span>Ideas in progress</span>
-                <b>Design<br />Build<br />Learn</b>
-              </div>
-            </div>
-            <div className="insights-signal__footer">
-              <span>Fractionl Studio</span>
-              <span>Coming soon</span>
-            </div>
-          </Reveal>
+  function filterBy(nextCategory: string) {
+    setCategory(nextCategory);
+    const url = nextCategory === "All Insights" ? "/insights" : `/insights?category=${encodeURIComponent(nextCategory)}`;
+    window.history.replaceState(null, "", url);
+  }
+
+  return (
+    <div className="insights-index">
+      <Helmet>
+        <title>Insights on Web Design, Development &amp; Product Design | Fractionl Studio</title>
+        <meta name="description" content="Practical insights on web design, WordPress, product design, UX/UI, web development, digital strategy, and building better digital experiences." />
+        <link rel="canonical" href={`${site.domain}/insights`} />
+        <meta property="og:title" content="Insights on Web Design, Development & Product Design | Fractionl Studio" />
+        <meta property="og:description" content="Practical insights on web design, WordPress, product design, UX/UI, web development, digital strategy, and building better digital experiences." />
+        <meta property="og:url" content={`${site.domain}/insights`} />
+      </Helmet>
+      <section className="insights-hero">
+        <div className="container insights-hero__inner">
+          <p className="eyebrow">Insights</p>
+          <h1>Practical thinking for better digital work.</h1>
+          <p>Clear guidance on websites, digital products, UX/UI, development, and technology decisions—written for founders, businesses, and teams working through what to build, improve, or do next.</p>
         </div>
       </section>
+
+      {publishedInsights.length === 0 ? (
+        <section className="insights-empty">
+          <div className="container insights-empty__inner">
+            <p className="eyebrow">Latest insights</p>
+            <h2>Useful ideas are on the way.</h2>
+            <p>We are preparing practical guidance on web design, digital products, development, and making better technology decisions.</p>
+            <Link className="btn btn-primary" to="/contact">Start a Conversation</Link>
+          </div>
+        </section>
+      ) : (
+        <>
+          {featured ? <FeaturedInsight insight={featured} /> : null}
+          <section className="insights-latest">
+            <div className="container">
+              <div className="insights-section-head">
+                <div><p className="eyebrow">Latest insights</p><h2>Ideas you can actually use.</h2></div>
+                {categories.length > 1 ? (
+                  <div className="insight-filters" aria-label="Filter insights by category">
+                    {["All Insights", ...categories].map((item) => <button type="button" aria-pressed={category === item} onClick={() => filterBy(item)} key={item}>{item}</button>)}
+                  </div>
+                ) : null}
+              </div>
+              {filtered.length ? <div className="insight-grid">{filtered.map((insight) => <InsightCard insight={insight} key={insight.id} />)}</div> : <div className="insight-filter-empty"><h3>No insights match this category.</h3><p>Try viewing all insights or choosing another category.</p></div>}
+            </div>
+          </section>
+        </>
+      )}
+      <InsightsCta />
     </div>
   );
+}
+
+function formatInsightDate(value: string) {
+  return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "long", day: "numeric" }).format(new Date(`${value}T12:00:00`));
+}
+
+function InsightDate({ value, prefix }: { value?: string; prefix?: string }) {
+  return value ? <time dateTime={value}>{prefix}{formatInsightDate(value)}</time> : null;
+}
+
+function InsightImage({ insight, variant, eager = false }: { insight: Insight; variant: "hero" | "card"; eager?: boolean }) {
+  if (!insight.heroImage) return null;
+  const webp = insight.heroImage.replace(/hero\.(?:png|jpe?g|webp|avif)$/i, `${variant}.webp`);
+  const avif = webp.replace(/\.webp$/i, ".avif");
+  const sourceWidth = insight.heroImageWidth ?? 1672;
+  const sourceHeight = insight.heroImageHeight ?? 941;
+  const width = variant === "card" ? Math.min(720, sourceWidth) : sourceWidth;
+  const height = Math.round(width * sourceHeight / sourceWidth);
+  const sizes = variant === "card" ? "(max-width: 560px) calc(100vw - 2.2rem), (max-width: 900px) 50vw, 33vw" : "(max-width: 1280px) calc(100vw - 2.2rem), 1180px";
+  const priority = eager ? { fetchpriority: "high" } : {};
+  return <picture>
+    <source srcSet={avif} type="image/avif" />
+    <img src={webp} alt={insight.heroImageAlt ?? ""} width={width} height={height} sizes={sizes} loading={eager ? "eager" : "lazy"} decoding="async" {...priority} />
+  </picture>;
+}
+
+function InsightCard({ insight }: { insight: Insight }) {
+  return <article className="insight-card">
+    <Link to={`/insights/${insight.slug}`} aria-label={`Read ${insight.title}`}>
+      <InsightImage insight={insight} variant="card" />
+      <div className="insight-card__body"><p className="eyebrow">{insight.category}</p><h3>{insight.title}</h3><p>{insight.excerpt}</p><div className="insight-meta"><InsightDate value={insight.publishedAt} /><span>{insight.readingTime}</span></div><span className="text-link">Read Insight <span aria-hidden="true">↗</span></span></div>
+    </Link>
+  </article>;
+}
+
+function FeaturedInsight({ insight }: { insight: Insight }) {
+  return <section className="featured-insight"><div className="container"><Link className="featured-insight__grid" to={`/insights/${insight.slug}`}>
+    <InsightImage insight={insight} variant="hero" eager />
+    <div><p className="eyebrow">{insight.category}</p><h2>{insight.title}</h2><p>{insight.excerpt}</p><div className="insight-meta"><InsightDate value={insight.publishedAt} /><span>{insight.readingTime}</span></div><span className="text-link">Read Insight <span aria-hidden="true">↗</span></span></div>
+  </Link></div></section>;
+}
+
+function InsightsCta() {
+  return <section className="insights-cta"><div className="container insights-cta__inner"><p className="eyebrow">Need help applying it?</p><h2>Turn the next idea into something useful.</h2><p>Tell us what you are building, improving, or trying to solve. Fractionl Studio can help you clarify the direction and move the right work forward.</p><div className="insights-cta__actions"><TallyButton className="btn btn-primary">Start a Project</TallyButton><Link className="btn btn-ghost" to="/services">Explore Our Services</Link></div></div></section>;
+}
+
+function SingleInsightPage() {
+  const { slug } = useParams();
+  const insight = getInsightBySlug(slug);
+  if (!insight) return <Navigate to="/insights" replace />;
+  const isDraft = insight.status === "draft";
+  const h2s = insight.content.filter((block): block is Extract<InsightContentBlock, { type: "h2" }> => block.type === "h2");
+  const sharedServices = Object.values(caseStudyServices);
+  const relatedServices = insight.relatedServiceSlugs.flatMap((slug) => {
+    const service = sharedServices.find((candidate) => candidate.href === `/services/${slug}`);
+    return service ? [service] : [];
+  }).slice(0, 3);
+  const explicit = insight.relatedInsightSlugs.flatMap((value) => {
+    const item = publishedInsights.find((candidate) => candidate.slug === value);
+    return item && item.id !== insight.id ? [item] : [];
+  });
+  const categoryFallback = publishedInsights.filter((item) => item.id !== insight.id && item.category === insight.category && !explicit.some((related) => related.id === item.id));
+  const relatedInsights = [...explicit, ...categoryFallback].slice(0, 3);
+  const canonicalPath = insight.canonicalUrl ?? `/insights/${insight.slug}`;
+  const canonical = canonicalPath.startsWith("http") ? canonicalPath : `${site.domain}${canonicalPath}`;
+  const faqHeadingIndex = insight.content.findIndex((block) => block.type === "h2" && block.text === "Frequently Asked Questions");
+  const faqItems = faqHeadingIndex < 0 ? [] : insight.content.slice(faqHeadingIndex + 1).flatMap((block, index, blocks) => {
+    const answer = blocks[index + 1];
+    return block.type === "h3" && answer?.type === "paragraph" ? [{ question: block.text, answer: answer.text }] : [];
+  });
+
+  return <article className="single-insight">
+    <Helmet>
+      <title>{insight.seoTitle}</title><meta name="description" content={insight.metaDescription} /><link rel="canonical" href={canonical} />
+      {isDraft ? <meta name="robots" content="noindex,nofollow" /> : null}
+      <meta property="og:type" content="article" /><meta property="og:title" content={insight.seoTitle} /><meta property="og:description" content={insight.metaDescription} /><meta property="og:url" content={canonical} />
+      {insight.heroImage ? <meta property="og:image" content={`${site.domain}${insight.heroImage}`} /> : null}
+      {insight.heroImage ? <meta property="og:image:alt" content={insight.heroImageAlt ?? ""} /> : null}
+      {insight.heroImageWidth ? <meta property="og:image:width" content={String(insight.heroImageWidth)} /> : null}
+      {insight.heroImageHeight ? <meta property="og:image:height" content={String(insight.heroImageHeight)} /> : null}
+      <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={insight.seoTitle} /><meta name="twitter:description" content={insight.metaDescription} />{insight.heroImage ? <meta name="twitter:image" content={`${site.domain}${insight.heroImage}`} /> : null}
+      <meta property="article:author" content={insight.author} />{insight.publishedAt ? <meta property="article:published_time" content={insight.publishedAt} /> : null}{insight.updatedAt ? <meta property="article:modified_time" content={insight.updatedAt} /> : null}
+      <script type="application/ld+json">{JSON.stringify({ "@context": "https://schema.org", "@type": "Article", headline: insight.title, description: insight.excerpt, ...(insight.publishedAt ? { datePublished: insight.publishedAt } : {}), ...(insight.updatedAt ? { dateModified: insight.updatedAt } : {}), author: { "@type": insight.author === "Fractionl Studio" ? "Organization" : "Person", name: insight.author }, publisher: { "@type": "Organization", name: site.name, url: site.domain }, mainEntityOfPage: canonical, ...(insight.heroImage ? { image: `${site.domain}${insight.heroImage}` } : {}) })}</script>
+      <script type="application/ld+json">{JSON.stringify({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: `${site.domain}/` }, { "@type": "ListItem", position: 2, name: "Insights", item: `${site.domain}/insights` }, { "@type": "ListItem", position: 3, name: insight.title }] })}</script>
+      {faqItems.length ? <script type="application/ld+json">{JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faqItems.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) })}</script> : null}
+    </Helmet>
+    <header className="insight-header"><div className="container insight-header__inner">
+      {isDraft ? <p className="insight-draft-label">Draft — not published</p> : null}
+      <nav className="breadcrumbs" aria-label="Breadcrumb"><ol><li><Link to="/">Home</Link></li><li><Link to="/insights">Insights</Link></li><li aria-current="page">{insight.title}</li></ol></nav>
+      <p className="eyebrow">{insight.category}</p><h1>{insight.title}</h1><p className="insight-header__excerpt">{insight.excerpt}</p>
+      <div className="insight-byline"><span>By {insight.author}</span><InsightDate value={insight.publishedAt} prefix="Published " />{insight.updatedAt && insight.updatedAt !== insight.publishedAt ? <InsightDate value={insight.updatedAt} prefix="Updated " /> : null}<span>{insight.readingTime}</span></div>
+    </div>{insight.heroImage ? <div className="container insight-hero-image"><InsightImage insight={insight} variant="hero" eager /></div> : null}</header>
+    <div className="container insight-reading-layout">
+      {h2s.length >= 3 ? <nav className="insight-toc" aria-label="Table of contents"><details open><summary>In this insight</summary><ol>{h2s.map((heading) => <li key={heading.text}><a href={`#${heading.id ?? toHeadingId(heading.text)}`}>{heading.text}</a></li>)}</ol></details></nav> : null}
+      <div className="insight-body">{insight.content.map((block, index) => <InsightBlock block={block} insight={insight} key={`${block.type}-${index}`} />)}</div>
+    </div>
+    {relatedServices.length ? <section className="insight-related"><div className="container"><p className="eyebrow">Related services</p><h2>Support for putting the ideas into practice.</h2><div className="insight-related__grid">{relatedServices.map((service) => <article key={service.href}><h3>{service.label}</h3><Link className="text-link" to={service.href}>Explore {service.label}</Link></article>)}</div></div></section> : null}
+    {relatedInsights.length ? <section className="insight-related insight-related--reading"><div className="container"><p className="eyebrow">Keep reading</p><h2>Related insights.</h2><div className="insight-grid">{relatedInsights.map((item) => <InsightCard insight={item} key={item.id} />)}</div></div></section> : null}
+    <section className="insight-final-cta"><div className="container"><p className="eyebrow">Work with Fractionl</p><h2>Ready to move the work forward?</h2><p>Tell us what you are building, improving, or trying to solve. We will help you determine the most useful next step.</p><div className="insights-cta__actions"><TallyButton className="btn btn-primary">Start a Project</TallyButton><Link className="btn btn-ghost" to="/work">Explore Our Work</Link></div></div></section>
+  </article>;
+}
+
+function InsightBlock({ block, insight }: { block: InsightContentBlock; insight: Insight }) {
+  if (block.type === "paragraph") return <p>{block.text}</p>;
+  if (block.type === "h2") return <h2 id={block.id ?? toHeadingId(block.text)}>{block.text}</h2>;
+  if (block.type === "h3") return <h3 id={block.id ?? toHeadingId(block.text)}>{block.text}</h3>;
+  if (block.type === "ordered-list" || block.type === "unordered-list") { const List = block.type === "ordered-list" ? "ol" : "ul"; return <List>{block.items.map((item) => <li key={item}>{item}</li>)}</List>; }
+  if (block.type === "blockquote") return <blockquote><p>{block.text}</p>{block.cite ? <cite>{block.cite}</cite> : null}</blockquote>;
+  if (block.type === "image") return <figure><img src={block.src} alt={block.alt} width={block.width} height={block.height} loading="lazy" />{block.caption ? <figcaption>{block.caption}</figcaption> : null}</figure>;
+  if (block.type === "table") return <figure className="insight-table">{block.caption ? <figcaption>{block.caption}</figcaption> : null}<div tabIndex={0} role="region" aria-label={block.caption ?? "Article comparison table"}><table><thead><tr>{block.headers.map((header) => <th scope="col" key={header}>{header}</th>)}</tr></thead><tbody>{block.rows.map((row, index) => <tr key={index}>{row.map((cell, cellIndex) => cellIndex === 0 ? <th scope="row" key={cell}>{cell}</th> : <td key={cellIndex}>{cell}</td>)}</tr>)}</tbody></table></div></figure>;
+  if (block.type === "callout") return <aside className="insight-callout">{block.heading ? <h3>{block.heading}</h3> : null}<p>{block.text}</p></aside>;
+  if (block.type === "link") return <p><a href={block.href}>{block.text}</a></p>;
+  if (block.type === "button") return <p><Link className="btn btn-primary" to={block.href}>{block.label}</Link></p>;
+  if (block.type === "code") return <pre><code className={block.language ? `language-${block.language}` : undefined}>{block.code}</code></pre>;
+  if (block.type === "related-service") { const service = services.find((item) => item.slug === block.serviceSlug); return service ? <p><Link to={`/services/${service.slug}`}>{block.label ?? service.title}</Link></p> : null; }
+  if (block.type === "inline-cta") return <InlineInsightCta variant={insight.ctaVariant} content={insight.ctaContent} />;
+  return null;
+}
+
+function InlineInsightCta({ variant, content: customContent }: { variant: Insight["ctaVariant"]; content?: Insight["ctaContent"] }) {
+  if (variant === "none") return null;
+  const content = customContent ?? (variant === "website-review" ? { eyebrow: "Not sure what your website needs?", heading: "Get a clearer direction for your website.", body: "We will look at your website in the context of your business and identify the opportunities we believe are most worth your attention.", label: "Request a Website Review", href: "/contact" } : variant === "product-support" ? { eyebrow: "Need extra product capacity?", heading: "Add experienced design, development, or both.", body: "Fractionl Studio can work alongside your team on product initiatives, launches, overflow, temporary coverage, and ongoing digital work.", label: "Explore Fractional Product Design & Development", href: "/services/fractional-product-design" } : { eyebrow: "Have something to build?", heading: "Bring the next digital project into focus.", body: "Tell us what you are working on, what is no longer working, or where your team needs support.", label: "Start a Project", href: "/contact" });
+  return <aside className="insight-inline-cta"><p className="eyebrow">{content.eyebrow}</p><h2>{content.heading}</h2><p>{content.body}</p><Link className="btn btn-primary" to={content.href}>{content.label}</Link></aside>;
 }
 
 function DeliverablesShowcase() {
