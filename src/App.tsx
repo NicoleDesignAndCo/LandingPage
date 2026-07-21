@@ -4,7 +4,7 @@ import { Link, Navigate, NavLink, Route, Routes, useLocation, useParams } from "
 import { caseStudies, caseStudyServices, founderWork, processSteps, services, site, studioWork, team, type CaseStudy } from "./data";
 import { getInsightBySlug, insightCategories, publishedInsights, toHeadingId, type Insight, type InsightContentBlock } from "./insights";
 import { useReveal, useScrolled } from "./hooks";
-import { initializeAnalytics, trackClick, trackPageView, trackRouteContentView, trackTallySubmission } from "./analytics";
+import { trackClick, trackPageView, trackRouteContentView, trackTallySubmission } from "./analytics";
 
 declare global {
   interface Window {
@@ -104,7 +104,6 @@ function Layout({ children }: { children: ReactNode }) {
   }, [location.pathname]);
 
   useEffect(() => {
-    initializeAnalytics();
     document.addEventListener("click", trackClick);
     window.addEventListener("message", trackTallySubmission);
     return () => {

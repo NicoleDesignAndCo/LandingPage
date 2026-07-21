@@ -65,18 +65,10 @@ The "Start a Project" buttons use the existing Tally popup. To change the form, 
 
 ## Google Analytics 4
 
-Production Analytics is configured with a Vite environment variable:
-
-```bash
-VITE_GA_MEASUREMENT_ID=G-3GST4GZ5Y5
-```
-
-Set this in the production deployment environment (for example, Vercel Project Settings → Environment Variables). `.env.production` configures local production builds and is intentionally ignored by Git; `.env.example` contains the safe placeholder for new environments.
-
-`src/analytics.ts` loads `gtag.js` asynchronously once, initializes GA4 with `send_page_view: false`, and safely does nothing when the ID is missing or Analytics is blocked. The route observer sends one manual `page_view` after the route and document title update for the initial visit and each SPA navigation.
+The official Google tag is installed directly in `index.html` with measurement ID `G-5NYS64CK8P`. Its `config` call sends the initial page view automatically. The route observer sends deduplicated manual `page_view` events only for subsequent SPA navigation.
 
 Custom events include `service_view`, `work_view`, `external_demo_click`, `insight_view`, `insight_cta_click`, `start_project_click`, `contact_click`, `email_click`, `website_review_click`, `outbound_link_click`, and `generate_lead`. `generate_lead` is sent only after Tally posts its confirmed `Tally.FormSubmitted` event; no form values are included.
 
-Ordinary local development does not send events. To test intentionally, use a local environment override with `VITE_GA_DEBUG=true` and a measurement ID, then confirm requests and events with Google Tag Assistant or the GA4 Realtime/DebugView reports. Remove or disable the debug flag afterward. GA4 events such as `generate_lead` can be marked as key events in the GA4 property.
+To test the integration, confirm requests and events with Google Tag Assistant or the GA4 Realtime/DebugView reports. GA4 events such as `generate_lead` can be marked as key events in the GA4 property.
 
 The site does not currently include a cookie banner or consent-preference system. Review privacy and consent requirements for each visitor region before relying on Analytics in production; this technical integration alone does not establish legal compliance.

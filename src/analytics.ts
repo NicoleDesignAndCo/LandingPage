@@ -1,47 +1,26 @@
 import { caseStudies, site, studioWork } from "./data";
 import { getInsightBySlug } from "./insights";
 
-export const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim() ?? "";
-
-const analyticsEnabled = Boolean(GA_MEASUREMENT_ID) && (import.meta.env.PROD || import.meta.env.VITE_GA_DEBUG === "true");
-let initialized = false;
+let initialPageViewHandled = false;
 let lastPageView = "";
 let lastContentView = "";
 
 export type AnalyticsParameters = Record<string, string | number | boolean | undefined>;
 
-export function initializeAnalytics() {
-  if (!analyticsEnabled || initialized || typeof window === "undefined") return false;
-  initialized = true;
-
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function gtag(...args: unknown[]) {
-    window.dataLayer?.push(args);
-  };
-
-  window.gtag("js", new Date());
-  window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
-
-  if (!document.getElementById("google-analytics-gtag")) {
-    const script = document.createElement("script");
-    script.id = "google-analytics-gtag";
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID)}`;
-    document.head.appendChild(script);
-  }
-
-  return true;
-}
-
 export function trackEvent(eventName: string, parameters: AnalyticsParameters = {}) {
-  if (!analyticsEnabled || !initializeAnalytics() || !window.gtag) return;
+  if (typeof window === "undefined" || !window.gtag) return;
   const safeParameters = Object.fromEntries(Object.entries(parameters).filter(([, value]) => value !== undefined));
   window.gtag("event", eventName, safeParameters);
 }
 
 export function trackPageView() {
-  if (!analyticsEnabled || typeof window === "undefined") return;
-  const pagePath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (typeof window === "undefined") return;
+  if (!initialPageViewHandled) {
+    initialPageViewHandled = true;
+    return;
+  }
+
+  const pagePath = `${window.location.pathname}${window.location.search}`;
   const signature = `${pagePath}|${document.title}`;
   if (signature === lastPageView) return;
   lastPageView = signature;
