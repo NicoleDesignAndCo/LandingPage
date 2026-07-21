@@ -4,6 +4,7 @@ import { Link, Navigate, NavLink, Route, Routes, useLocation, useParams } from "
 import { caseStudies, caseStudyServices, founderWork, processSteps, services, site, studioWork, team, type CaseStudy } from "./data";
 import { getInsightBySlug, insightCategories, publishedInsights, toHeadingId, type Insight, type InsightContentBlock } from "./insights";
 import { useReveal, useScrolled } from "./hooks";
+import { initializeAnalytics, trackClick, trackPageView, trackRouteContentView, trackTallySubmission } from "./analytics";
 
 declare global {
   interface Window {
@@ -101,6 +102,24 @@ function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
+
+  useEffect(() => {
+    initializeAnalytics();
+    document.addEventListener("click", trackClick);
+    window.addEventListener("message", trackTallySubmission);
+    return () => {
+      document.removeEventListener("click", trackClick);
+      window.removeEventListener("message", trackTallySubmission);
+    };
+  }, []);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      trackPageView();
+      trackRouteContentView(location.pathname);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.pathname, location.search, location.hash]);
 
   return (
     <>
