@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ruleset name="Fractionl Studio">
+  <description>WordPress Coding Standards for the Fractionl Studio theme.</description>
+  <file>.</file>
+  <exclude-pattern>assets/*</exclude-pattern>
+  <exclude-pattern>vendor/*</exclude-pattern>
+  <exclude-pattern>inc/content-snapshot.json</exclude-pattern>
+  <arg name="extensions" value="php"/>
+  <arg name="colors"/>
+  <rule ref="WordPress-Core">
+    <exclude name="Universal.Operators.DisallowShortTernary"/>
+    <exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
+    <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+    <exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited"/>
+  </rule>
+  <rule ref="WordPress-Docs">
+    <exclude name="Squiz.Commenting.FileComment.Missing"/>
+    <exclude name="Squiz.Commenting.FileComment.SpacingAfterComment"/>
+    <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+    <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+    <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+  </rule>
+  <rule ref="WordPress-Extra">
+    <exclude name="Universal.Operators.DisallowShortTernary"/>
+    <exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
+    <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+    <exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited"/>
+    <exclude name="WordPress.WP.I18n.NonSingularStringLiteralText"/>
+  </rule>
+  <rule ref="PHPCompatibilityWP"/>
+  <config name="testVersion" value="8.2-"/>
+</ruleset>

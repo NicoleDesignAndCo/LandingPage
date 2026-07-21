@@ -1,0 +1,4 @@
+@import url("main.css");
+.editor-styles-wrapper{background:#fbfaf6;color:#1b1a16;font-family:"Hanken Grotesk",system-ui,sans-serif}
+.editor-styles-wrapper .container{max-width:1180px}
+.editor-styles-wrapper .reveal{opacity:1!important;transform:none!important}

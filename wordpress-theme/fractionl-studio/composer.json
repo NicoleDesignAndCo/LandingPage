@@ -1,0 +1,21 @@
+{
+  "name": "fractionl-studio/theme",
+  "description": "Custom WordPress theme for Fractionl Studio",
+  "type": "wordpress-theme",
+  "require": { "php": ">=8.2" },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "squizlabs/php_codesniffer": "^3.13",
+    "wp-coding-standards/wpcs": "^3.2"
+  },
+  "scripts": {
+    "lint": "php -l functions.php && find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
+    "phpcs": "phpcs"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

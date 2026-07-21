@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": { "contentSize": "760px", "wideSize": "1180px" },
+    "color": {
+      "custom": false,
+      "customGradient": false,
+      "defaultPalette": false,
+      "palette": [
+        { "slug": "background", "name": "Background", "color": "#FBFAF6" },
+        { "slug": "paper", "name": "Paper", "color": "#FFFFFF" },
+        { "slug": "beige", "name": "Beige", "color": "#F0EBE0" },
+        { "slug": "beige-deep", "name": "Deep Beige", "color": "#E6DECF" },
+        { "slug": "ink", "name": "Ink", "color": "#1B1A16" },
+        { "slug": "ink-soft", "name": "Soft Ink", "color": "#595549" },
+        { "slug": "accent", "name": "Accent", "color": "#2337FE" },
+        { "slug": "accent-deep", "name": "Deep Accent", "color": "#1726C9" },
+        { "slug": "accent-tint", "name": "Accent Tint", "color": "#ECEEFF" }
+      ]
+    },
+    "spacing": {
+      "customSpacingSize": false,
+      "spacingSizes": [
+        { "slug": "20", "name": "Small", "size": "1rem" },
+        { "slug": "30", "name": "Medium", "size": "1.5rem" },
+        { "slug": "40", "name": "Large", "size": "2.5rem" },
+        { "slug": "50", "name": "Section", "size": "clamp(4.5rem, 11vh, 8.5rem)" }
+      ],
+      "units": ["px", "rem", "em", "%", "vw", "vh"]
+    },
+    "typography": {
+      "customFontSize": false,
+      "defaultFontSizes": false,
+      "fontFamilies": [
+        { "slug": "sans", "name": "Hanken Grotesk", "fontFamily": "\"Hanken Grotesk\", system-ui, sans-serif" },
+        { "slug": "serif", "name": "Spectral", "fontFamily": "\"Spectral\", Georgia, serif" }
+      ],
+      "fontSizes": [
+        { "slug": "small", "name": "Small", "size": "0.875rem" },
+        { "slug": "medium", "name": "Medium", "size": "1.0625rem" },
+        { "slug": "large", "name": "Large", "size": "1.25rem" },
+        { "slug": "display", "name": "Display", "size": "clamp(3rem, 7vw, 6.5rem)" }
+      ]
+    }
+  },
+  "styles": {
+    "color": { "background": "#FBFAF6", "text": "#1B1A16" },
+    "typography": { "fontFamily": "var:preset|font-family|sans", "fontSize": "17px", "lineHeight": "1.6" },
+    "elements": {
+      "heading": { "color": { "text": "#1B1A16" } },
+      "link": { "color": { "text": "#2337FE" } }
+    }
+  }
+}
