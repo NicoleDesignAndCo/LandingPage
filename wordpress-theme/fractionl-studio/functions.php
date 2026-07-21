@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FRACTIONL_VERSION', '1.0.0' );
+define( 'FRACTIONL_VERSION', '1.0.2' );
 define( 'FRACTIONL_PATH', get_template_directory() );
 define( 'FRACTIONL_URI', get_template_directory_uri() );
 

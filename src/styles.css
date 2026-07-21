@@ -1875,6 +1875,85 @@ main:focus { outline: none; }
 
 /* Cascade guard: keep the shared quality rules authoritative. */
 .container { max-width: var(--content-wide); padding-inline: max(clamp(1.1rem, 4vw, 3.5rem), env(safe-area-inset-left)); }
+
+/* Dark-surface contract: dark blocks must not depend on inherited text colour.
+   This keeps WordPress/global heading and link rules from creating dark-on-dark
+   regressions while preserving each component's established button variant. */
+:is(
+  .contact,
+  .about-body,
+  .deliverables-showcase,
+  .about-page__cta,
+  .engagements,
+  .single-service__cta,
+  .case-cta,
+  .single-service__proof-side,
+  .services-grid--preview .service-card:nth-child(odd)
+) :where(h1, h2, h3, h4, h5, h6, .section-title, .contact-title, .service-title, .service-title a) {
+  color: #fff;
+}
+:is(
+  .contact,
+  .about-body,
+  .deliverables-showcase,
+  .about-page__cta,
+  .engagements,
+  .single-service__cta,
+  .case-cta,
+  .single-service__proof-side,
+  .services-grid--preview .service-card:nth-child(odd)
+) :where(p, li, .section-intro, .service-desc) {
+  color: rgba(255, 255, 255, .76);
+}
+:is(
+  .contact,
+  .about-body,
+  .deliverables-showcase,
+  .about-page__cta,
+  .engagements,
+  .single-service__cta,
+  .case-cta
+) .eyebrow {
+  color: #aeb5ff;
+}
+:is(
+  .contact,
+  .about-body,
+  .deliverables-showcase,
+  .about-page__cta,
+  .engagements,
+  .single-service__cta,
+  .case-cta,
+  .services-grid--preview .service-card:nth-child(odd)
+) :where(a:not(.btn), .text-link, .card-link) {
+  color: #fff;
+}
+:is(
+  .contact,
+  .about-body,
+  .deliverables-showcase,
+  .about-page__cta,
+  .engagements,
+  .single-service__cta,
+  .case-cta,
+  .services-grid--preview .service-card:nth-child(odd)
+) :where(a:not(.btn), .text-link, .card-link):is(:hover, :focus-visible, :active, :visited) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .8);
+}
+.contact .btn-primary:is(:hover, :focus-visible, :active),
+.single-service__cta-button:is(:hover, :focus-visible, :active) {
+  color: var(--accent);
+}
+.about-page__cta .btn:is(:hover, :focus-visible, :active),
+.case-cta .btn-primary:is(:hover, :focus-visible, :active) {
+  color: #fff;
+}
+.case-cta .btn-ghost:is(:hover, :focus-visible, :active, :visited) {
+  border-color: #fff;
+  background: #fff;
+  color: var(--ink);
+}
 :where(button, .btn, .nav-cta, .text-link, .card-link, .team-link) { min-height: 44px; }
 .btn { min-width: 9.5rem; line-height: 1.2; }
 .nav-desktop > a { display: inline-flex; align-items: center; min-height: 44px; }

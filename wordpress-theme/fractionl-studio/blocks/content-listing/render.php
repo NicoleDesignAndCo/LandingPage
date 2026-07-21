@@ -9,6 +9,13 @@ $args      = array(
 	'orderby'        => 'menu_order date',
 	'order'          => 'ASC',
 );
+if ( is_front_page() && 'service' === $post_type ) {
+	$args['post_name__in'] = array( 'technology-consulting', 'website-design-development', 'fractional-product-design', 'managed-hosting-support' );
+	$args['orderby']        = 'post_name__in';
+} elseif ( is_front_page() && 'case_study' === $post_type ) {
+	$args['post_name__in'] = array( 'navigation-restructure', 'pensioner-profile', 'restaurant-website-redesign' );
+	$args['orderby']        = 'post_name__in';
+}
 if ( $selected ) {
 	$args['post__in'] = $selected;
 	$args['orderby']  = 'post__in'; }
@@ -19,7 +26,7 @@ $listing = new WP_Query( $args );
 	<?php
 	if ( $listing->have_posts() ) :
 		?>
-		<div class="<?php echo 'service' === $post_type ? 'services-grid' : ( 'post' === $post_type ? 'insight-grid' : 'work-grid work-grid--editorial' ); ?>">
+		<div class="<?php echo 'service' === $post_type ? 'services-grid' . ( is_front_page() ? ' services-grid--preview' : '' ) : ( 'post' === $post_type ? 'insight-grid' : 'work-grid work-grid--editorial' ); ?>">
 		<?php
 		while ( $listing->have_posts() ) :
 				$listing->the_post();

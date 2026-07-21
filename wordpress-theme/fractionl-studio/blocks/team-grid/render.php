@@ -1,6 +1,6 @@
 <?php $members = fractionl_option( 'team_members', array() );
 $details       = (bool) get_field( 'show_details' ); ?>
-<section id="<?php echo esc_attr( fractionl_block_id( $block, 'team' ) ); ?>" class="<?php echo esc_attr( fractionl_block_classes( $block, 'team team--page page-section' ) ); ?>"><div class="container"><?php fractionl_render_section_heading( (string) get_field( 'eyebrow' ), (string) get_field( 'heading' ), (string) get_field( 'introduction' ) ); ?><div class="team-grid">
+<section id="<?php echo esc_attr( fractionl_block_id( $block, 'team' ) ); ?>" class="<?php echo esc_attr( fractionl_block_classes( $block, 'team team--page page-section' ) ); ?>"><div class="container"><?php fractionl_render_section_heading( (string) get_field( 'eyebrow' ), (string) get_field( 'heading' ), (string) get_field( 'introduction' ) ); ?><div class="team-grid<?php echo is_front_page() ? ' team-grid--preview' : ''; ?>">
 <?php
 foreach ( is_array( $members ) ? $members : array() as $member ) :
 	?>

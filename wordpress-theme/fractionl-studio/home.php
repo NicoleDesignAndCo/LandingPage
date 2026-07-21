@@ -1,26 +1,13 @@
 <?php
-/** Insights index. @package Fractionl_Studio */
+/** React-parity Insights index. @package Fractionl_Studio */
 get_header();
-$categories = get_categories( array( 'hide_empty' => true ) );
+$featured = new WP_Query( array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 1, 'meta_key' => 'featured_insight', 'meta_value' => '1' ) );
+$featured_id = $featured->have_posts() ? (int) $featured->posts[0]->ID : 0;
+$insights = new WP_Query( array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 12, 'post__not_in' => $featured_id ? array( $featured_id ) : array(), 'category__not_in' => array_filter( array( (int) get_option( 'default_category' ) ) ), 'orderby' => 'date', 'order' => 'DESC' ) );
+$categories = get_categories( array( 'hide_empty' => true, 'exclude' => array_filter( array( (int) get_option( 'default_category' ) ) ) ) );
 ?>
-<div class="insights-index">
-	<section class="insights-hero"><div class="container insights-hero__inner"><p class="eyebrow"><?php esc_html_e( 'Insights', 'fractionl-studio' ); ?></p><h1><?php esc_html_e( 'Practical thinking for better digital work.', 'fractionl-studio' ); ?></h1><p><?php esc_html_e( 'Clear guidance on websites, digital products, UX/UI, development, and technology decisions—written for founders, businesses, and teams.', 'fractionl-studio' ); ?></p></div></section>
-	<section class="insights-latest"><div class="container"><div class="insights-section-head"><div><p class="eyebrow"><?php esc_html_e( 'Latest insights', 'fractionl-studio' ); ?></p><h2><?php esc_html_e( 'Ideas you can actually use.', 'fractionl-studio' ); ?></h2></div>
-	<?php
-	if ( $categories ) :
-		?>
-		<div class="insight-filters" aria-label="<?php esc_attr_e( 'Filter insights by category', 'fractionl-studio' ); ?>"><button type="button" aria-pressed="true" data-insight-filter="all"><?php esc_html_e( 'All Insights', 'fractionl-studio' ); ?></button>
-		<?php
-		foreach ( $categories as $category ) :
-			?>
-		<button type="button" aria-pressed="false" data-insight-filter="<?php echo esc_attr( $category->slug ); ?>"><?php echo esc_html( $category->name ); ?></button><?php endforeach; ?></div><?php endif; ?></div><div class="insight-grid">
-		<?php
-		while ( have_posts() ) :
-			the_post();
-			get_template_part( 'template-parts/cards/card', 'post' );
-endwhile;
-		?>
-</div><?php the_posts_pagination( array( 'class' => 'pagination' ) ); ?></div></section>
-	<section class="insights-cta"><div class="container insights-cta__inner"><p class="eyebrow">Need help applying it?</p><h2>Turn the next idea into something useful.</h2><p>Tell us what you are building, improving, or trying to solve.</p><div class="insights-cta__actions"><?php fractionl_tally_button(); ?><a class="btn btn-ghost" href="<?php echo esc_url( fractionl_get_page_url( 'services', '/services/' ) ); ?>">Explore Our Services</a></div></div></section>
-</div>
-<?php get_footer(); ?>
+<div class="insights-index"><section class="insights-hero"><div class="container insights-hero__inner"><p class="eyebrow">Insights</p><h1>Practical thinking for better digital work.</h1><p>Clear guidance on websites, digital products, UX/UI, development, and technology decisions—written for founders, businesses, and teams working through what to build, improve, or do next.</p></div></section>
+<?php if ( $featured->have_posts() ) : $featured->the_post(); ?><section class="featured-insight"><div class="container"><a class="featured-insight__grid" href="<?php the_permalink(); ?>"><?php the_post_thumbnail( 'fractionl-hero', array( 'loading' => 'eager' ) ); ?><div><p class="eyebrow"><?php echo esc_html( get_the_category()[0]->name ?? 'Insight' ); ?></p><h2><?php the_title(); ?></h2><p><?php echo esc_html( get_the_excerpt() ); ?></p><div class="insight-meta"><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time><span><?php echo esc_html( fractionl_reading_time() ); ?></span></div><span class="text-link">Read Insight <span aria-hidden="true">↗</span></span></div></a></div></section><?php endif; wp_reset_postdata(); ?>
+<section class="insights-latest"><div class="container"><div class="insights-section-head"><div><p class="eyebrow">Latest insights</p><h2>Ideas you can actually use.</h2></div><?php if ( $categories ) : ?><div class="insight-filters" aria-label="Filter insights by category"><button type="button" aria-pressed="true" data-insight-filter="all">All Insights</button><?php foreach ( $categories as $category ) : ?><button type="button" aria-pressed="false" data-insight-filter="<?php echo esc_attr( $category->slug ); ?>"><?php echo esc_html( $category->name ); ?></button><?php endforeach; ?></div><?php endif; ?></div><div class="insight-grid"><?php while ( $insights->have_posts() ) : $insights->the_post(); get_template_part( 'template-parts/cards/card', 'post' ); endwhile; wp_reset_postdata(); ?></div></div></section>
+<section class="insights-cta"><div class="container insights-cta__inner"><p class="eyebrow">Need help applying it?</p><h2>Turn the next idea into something useful.</h2><p>Tell us what you are building, improving, or trying to solve. Fractionl Studio can help you clarify the direction and move the right work forward.</p><div class="insights-cta__actions"><?php fractionl_tally_button(); ?><a class="btn btn-ghost" href="<?php echo esc_url( fractionl_get_page_url( 'services', '/services/' ) ); ?>">Explore Our Services</a></div></div></section></div>
+<?php get_footer();
