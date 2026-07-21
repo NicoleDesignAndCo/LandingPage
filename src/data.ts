@@ -46,30 +46,6 @@ export const services = [
   },
 ] as const;
 
-export const sampleWebsites = [
-  {
-    title: "Maya Bennett Real Estate",
-    businessType: "Independent Realtor",
-    description:
-      "A personal brand website for an independent realtor, featuring listings, buying and selling pages, lead capture, and a single property listing page.",
-    url: "https://maya-bennett.vercel.app/",
-  },
-  {
-    title: "Serene Paths Clinic",
-    businessType: "Therapist / Coach / Wellness Provider",
-    description:
-      "A calm, professional website for a therapist, coach, or wellness provider, featuring services, resources, consultation booking, and trust-building content.",
-    url: "https://serene-paths.vercel.app/",
-  },
-  {
-    title: "North Peak Coffee Co.",
-    businessType: "Local Ecommerce",
-    description:
-      "A small ecommerce website for a local coffee roaster, featuring product browsing, product detail pages, cart experience, and brand storytelling.",
-    url: "https://north-peak-coffee-co.vercel.app/",
-  },
-] as const;
-
 export const studioWork = [
   {
     slug: "trifold-brochure",
@@ -119,6 +95,30 @@ export const studioWork = [
     description:
       "A unified workflow for creating, scheduling, reviewing, and sending high-volume patient communications within Inphonite.",
     url: "/work/message-blast",
+  },
+  {
+    title: "Maya Bennett Real Estate",
+    businessType: "Independent Realtor",
+    projectType: "demo",
+    description:
+      "A personal brand website for an independent realtor, featuring listings, buying and selling pages, lead capture, and a single property listing page.",
+    url: "https://maya-bennett.vercel.app/",
+  },
+  {
+    title: "Serene Paths Clinic",
+    businessType: "Therapist / Coach / Wellness Provider",
+    projectType: "demo",
+    description:
+      "A calm, professional website for a therapist, coach, or wellness provider, featuring services, resources, consultation booking, and trust-building content.",
+    url: "https://serene-paths.vercel.app/",
+  },
+  {
+    title: "North Peak Coffee Co.",
+    businessType: "Local Ecommerce",
+    projectType: "demo",
+    description:
+      "A small ecommerce website for a local coffee roaster, featuring product browsing, product detail pages, cart experience, and brand storytelling.",
+    url: "https://north-peak-coffee-co.vercel.app/",
   },
 ] as const;
 

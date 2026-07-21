@@ -1,7 +1,7 @@
 import { ElementType, ReactNode, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, Navigate, NavLink, Route, Routes, useLocation, useParams } from "react-router-dom";
-import { caseStudies, caseStudyServices, founderWork, processSteps, sampleWebsites, services, site, studioWork, team, type CaseStudy } from "./data";
+import { caseStudies, caseStudyServices, founderWork, processSteps, services, site, studioWork, team, type CaseStudy } from "./data";
 import { getInsightBySlug, insightCategories, publishedInsights, toHeadingId, type Insight, type InsightContentBlock } from "./insights";
 import { useReveal, useScrolled } from "./hooks";
 
@@ -1475,12 +1475,6 @@ function WorkPage() {
       >
         <WorkSection title="Studio Work" items={studioWork} linkLabel="View Project" />
         <WorkSection title="Founder Work" items={founderWork} linkLabel="View Portfolio" alternate />
-        <WorkSection
-          title="Demo Sites"
-          intro="Demos showing what we can build across different industries."
-          items={sampleWebsites}
-          linkLabel="View Demo"
-        />
         <WorkFinalCta />
       </PageShell>
     </div>
@@ -1534,6 +1528,7 @@ function CaseVisualInner({ project, index }: { project: CaseStudy; index: number
 type WorkItem = {
   title: string;
   businessType: string;
+  projectType?: "demo";
   description: string;
   url: string;
 };
@@ -1560,12 +1555,15 @@ function WorkSection({
             <Reveal as="article" className="work-card" key={item.title}>
               <ProjectVisual title={item.title} />
               <h3 className="work-title">{item.title}</h3>
-              <p className="work-type">{item.businessType}</p>
+              <p className="work-type">
+                {item.projectType === "demo" ? <><span>DEMO SITE</span><span aria-hidden="true"> · </span></> : null}
+                {item.businessType}
+              </p>
               <p className="work-desc">{item.description}</p>
               {"slug" in item ? <Link className="card-link" to={`/work/${item.slug}`}>
                 {linkLabel}<span className="link-arrow" aria-hidden="true">↗</span>
               </Link> : <a className="card-link" href={item.url} target="_blank" rel="noopener noreferrer">
-                {linkLabel}<span className="link-arrow" aria-hidden="true">↗</span>
+                {item.projectType === "demo" ? "View Demo" : linkLabel}<span className="link-arrow" aria-hidden="true">↗</span>
               </a>}
             </Reveal>
           ))}
@@ -1578,6 +1576,7 @@ function WorkSection({
 function SampleWebsitesSection({ standalone = false }: { standalone?: boolean }) {
   const selectedWork = studioWork
     .map((project, displayOrder) => ({ project, displayOrder }))
+    .filter(({ project }) => "slug" in project)
     .filter(({ project }) => !("showOnHomepage" in project) || project.showOnHomepage !== false)
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .slice(0, 3)
@@ -1600,7 +1599,7 @@ function SampleWebsitesSection({ standalone = false }: { standalone?: boolean })
               <h3 className="work-title">{project.title}</h3>
               <p className="work-type">{project.businessType}</p>
               <p className="work-desc">{project.description}</p>
-              <Link className="card-link" to={`/work/${project.slug}`}>
+              <Link className="card-link" to={project.url}>
                 View Project<span className="link-arrow" aria-hidden="true">↗</span>
               </Link>
             </Reveal>
