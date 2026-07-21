@@ -68,7 +68,7 @@ The "Start a Project" buttons use the existing Tally popup. To change the form, 
 Production Analytics is configured with a Vite environment variable:
 
 ```bash
-VITE_GA_MEASUREMENT_ID=G-5NYS64CK8P
+VITE_GA_MEASUREMENT_ID=G-3GST4GZ5Y5
 ```
 
 Set this in the production deployment environment (for example, Vercel Project Settings → Environment Variables). `.env.production` configures local production builds and is intentionally ignored by Git; `.env.example` contains the safe placeholder for new environments.
